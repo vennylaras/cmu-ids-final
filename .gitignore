@@ -1,0 +1,14 @@
+# PyCharm
+.idea/
+__pycache__/
+
+# JupyterNotebooks
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Mac
+.DS_Store
