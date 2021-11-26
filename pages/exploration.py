@@ -19,13 +19,7 @@ df_country['country'] = df_country['country'].str.strip()
 
 happiness = pd.read_excel (r'HappinessScores.xls')
 happiness.dropna() 
-
-mortality = pd.read_excel (r'MortalityData.xlsx')
-new_header = mortality.iloc[1] #grab the first row for the header
-mortality = mortality[2:] #take the data less the header row
-mortality.columns = new_header #
-mortality['Period']= mortality['Period'].apply(lambda x: int(x))
-mortality.dropna() 
+ 
 
 suicide = pd.read_csv('suicide.csv')
 suicide.dropna()
