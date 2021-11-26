@@ -101,7 +101,7 @@ def app():
 
 
 
-    # TODO Add analysis of missing data, duplicates, etc
+    
     st.text("")
     st.markdown('###  Initial Exploration')
     st.markdown('##### Analysis of Missing Data')
@@ -152,7 +152,7 @@ def app():
 
     st.dataframe(stats(df_happy))
 
-    # TODO: Maybe add a dropdown for each attribute so that it won't be too long?
+
     columns = df_happy.columns.tolist()
     columns.remove('year')
     columns.remove('Country name')
@@ -233,8 +233,8 @@ def app():
     st.write('Here, we are going to see the happiness index trend for each country in its respective region. \
     To get the region (continent) and sub-region for each country, we joined the happiness index dataset with \
     the United Nations (UN) geoscheme data. There are several countries which have inconsistent names so we manually \
-    changed them before joining. Furthermore, there are two countries/territories present in the happiness dataset which \
-    are not present in the UN dataset, namely Kosovo and Taiwan, so we added them manually to their respective regions.')
+    changed them before joining. Furthermore, there are five countries/territories present in the happiness dataset which \
+    are not present in the UN dataset, so we added them manually to their respective regions.')
 
     def plot_line_chart(i, j, region): 
         df_reg = df[df['sub-subregion'] == region]

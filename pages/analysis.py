@@ -59,10 +59,17 @@ def load_data():
     df_mh_adm = pd.read_excel('data/MentalHealthAdmissionsPer100000.xlsx')
     df_mh_fac = pd.read_excel('data/MentalHealthFacilitiesPer100000.xlsx')
 
-    return df, df_pivot, df_country, df_gender, df_mh_adm, df_mh_fac
+    # Suicide
+    df_suicide = pd.read_excel ('data/MortalityData.xlsx')
+    new_header = df_suicide.iloc[1] # grab the first row for the header
+    df_suicide = df_suicide [2:] # take the data less the header row
+    df_suicide.columns = new_header
+    df_suicide['Period']= df_suicide['Period'].apply(lambda x: int(x))
+
+    return df, df_pivot, df_country, df_gender, df_mh_adm, df_mh_fac, df_suicide
 
 def app():
-    df, df_pivot, df_country, df_gender, df_mh_adm, df_mh_fac = load_data()
+    df, df_pivot, df_country, df_gender, df_mh_adm, df_mh_fac, df_suicide = load_data()
 
     st.title('Contributing Factors')
 
@@ -82,7 +89,8 @@ def app():
         # st.markdown('### Social Support')
         df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)]
         df1 = df1.groupby(['region','year'])[['Social support']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1, x="Year", y="Social support", color = 'region',title='Social Support by Year')
+        fig = px.line(df1, x="Year", y="Social support", color = 'region',title='Social Support by Year',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
 
         st.write('This graph shows the yearly change in social support that was available in each continent in the past years. \
@@ -103,7 +111,8 @@ def app():
         # st.markdown('### Healthy Life Expectancy at Birth')
         df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
         df1 = df1.groupby(['region','year'])[['Healthy life expectancy at birth']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1.dropna(), x="Year", y="Healthy life expectancy at birth", color = 'region',title='Healthy Life Expectancy at Birth by Year')
+        fig = px.line(df1.dropna(), x="Year", y="Healthy life expectancy at birth", color = 'region',title='Healthy Life Expectancy at Birth by Year',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
         st.write('In general, healthy life expectancy at birth increases in all continents. Especially, the value in Africa increases the fastest.')
         
@@ -119,7 +128,8 @@ def app():
         # st.markdown('### Gross Domestic Product')
         df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
         df1 = df1.groupby(['region','year'])[['Log GDP per capita']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1.dropna(), x="Year", y="Log GDP per capita", color = 'region',title='GDP by Year')
+        fig = px.line(df1.dropna(), x="Year", y="Log GDP per capita", color = 'region',title='GDP by Year',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
         st.write('In general, log GDP per capita slowly increases in all continents.')
 
@@ -138,7 +148,8 @@ def app():
         # st.markdown('### Generosity')
         df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
         df1 = df1.groupby(['region','year'])[['Generosity']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1.dropna(), x="Year", y="Generosity", color = 'region',title='Generosity by Year')
+        fig = px.line(df1.dropna(), x="Year", y="Generosity", color = 'region',title='Generosity by Year',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
         st.write('Generosity fluctuates and slowly decreases by 2018; however it slightly increases in all continents after 2018.')
 
@@ -155,7 +166,8 @@ def app():
         # st.markdown('### Freedom to Make Life Choices')
         df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
         df1 = df1.groupby(['region','year'])[['Freedom to make life choices']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1.dropna(), x="Year", y="Freedom to make life choices", color = 'region',title='Freedom to make life choices change by Year')
+        fig = px.line(df1.dropna(), x="Year", y="Freedom to make life choices", color = 'region',title='Freedom to make life choices change by Year',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
         st.write('Freedom to make a life choices increase in all continents; however, in 2012, this feature reaches the lowest point in Asia and Africa')
 
@@ -174,7 +186,8 @@ def app():
         # st.markdown('### Perceptions of Corruption')
         df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
         df1 = df1.groupby(['region','year'])[['Perceptions of corruption']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1.dropna(), x="Year", y="Perceptions of corruption", color = 'region',title='Perceptions of corruption change by Year')
+        fig = px.line(df1.dropna(), x="Year", y="Perceptions of corruption", color = 'region',title='Perceptions of corruption change by Year',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
         st.write('Except for Asia and Africa, this feature slightly increases in entire continents.')
 
@@ -209,13 +222,13 @@ def app():
         merged = happiness_df_with_continent.merge(gender_19, on='Country', how='inner')
         merged = merged.rename(columns={'2019_x':'Happiness','2019_y':'GDI'})
         
-        fig = px.scatter(merged.dropna(), x="GDI", y="Happiness", hover_name='Country', color='region')
+        fig = px.scatter(merged.dropna(), x="GDI", y="Happiness", hover_name='Country', color='region',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
 
         return fig
     
     st.plotly_chart(plot_gender(df_pivot, df_gender))
 
-    # TODO: Make all the continent colors consistent accross charts!!!
 
     st.write("""
         We observe that countries having a higher GDI have a higher happiness score. This seems to align with what \
@@ -247,7 +260,8 @@ def app():
         happiness_mental_health_merged = happiness_df_with_continent.merge(mental_health, on='Country', how='inner')
         happiness_mental_health_merged = happiness_mental_health_merged.rename(columns={'2019':'Happiness'})
 
-        fig = px.scatter(happiness_mental_health_merged.dropna(), x="MentalHealthAdmissionsPer100000", y="Happiness", hover_name='Country', color="region")
+        fig = px.scatter(happiness_mental_health_merged.dropna(), x="MentalHealthAdmissionsPer100000", y="Happiness", hover_name='Country', color="region",
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         return fig
     
     st.plotly_chart(plot_mental_health(df_pivot, df_mh_adm))
@@ -274,4 +288,29 @@ def app():
         mental health are more likely to have a higher happiness score. The graph could also indicate that there is poor \
         reporting of mental health admissions in various countries.
     """)
+
+    st.text("")
+    st.markdown('### Suicide Rates')
+
+    st.write("In this section, we examine the correlation between suicide rate and happiness. \
+        We used the suicide rate data per 100,000 people. [Add more .....]")
+
+    def plot_suicide(df, suicide):
+        suicide = suicide[['Location','FactValueNumeric', 'ParentLocation', 'Period']]
+        suicide = suicide.rename(columns={'Location':'Country', 
+                                        'FactValueNumeric':'SuicideRatePer100000'})
+        suicide['Country'] = suicide['Country'].str.strip()
+
+
+        happiness_suicide_merged = df.merge(suicide, left_on=['Country name', 'year'], right_on=['Country', 'Period'], how='inner')
+
+        fig = px.scatter(happiness_suicide_merged.dropna(), x="SuicideRatePer100000", y="Happiness Score", hover_name='Country name', 
+                color="region", range_x=(0,100), animation_frame='year',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
+        return fig
+
+    st.plotly_chart(plot_suicide(df, df_suicide))
+
+    st.write("TODO: Add writeup")
+
 
