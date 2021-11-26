@@ -222,7 +222,7 @@ def app():
     """)
 
     developing_countries = list(df_hdi[df_hdi["hdi2019"] < 0.7]["country"])
-    region_df = df[df["Country name"].isin(developing_countries)]
+    region_df = df_happy[df_happy["Country name"].isin(developing_countries)]
     fig = plt.figure()
     sns.heatmap(region_df.corr(), cmap="coolwarm_r")
     st.pyplot(fig)

@@ -1,8 +1,8 @@
 import streamlit as st
 
 # Custom imports 
-from multipage import MultiPage
-from pages import home, dataset, analysis
+from util.multipage import MultiPage
+from pages import home, dataset, analysis, case
 
 # Create an instance of the app 
 app = MultiPage()
@@ -11,6 +11,7 @@ app = MultiPage()
 app.add_page("Home", home.app)
 app.add_page("Dataset", dataset.app)
 app.add_page("Analysis", analysis.app)
+app.add_page("Case Studies", case.app)
 
 # The main app
 app.run()

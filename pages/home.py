@@ -52,7 +52,8 @@ def world_map(df):
               locationmode="country names",
               color=df_happy_sort_year['Life Ladder'],
               animation_frame=df_happy_sort_year['year'],
-              color_continuous_scale="Bluyl")
+              color_continuous_scale="Bluyl",
+              range_color=(2.5, 7.5))
     fig.update_geos(projection_type="natural earth")
     fig.update_layout(geo=dict(bgcolor= 'rgba(0,0,0,0)'))
     return fig
