@@ -66,10 +66,14 @@ def load_data():
     df_suicide.columns = new_header
     df_suicide['Period']= df_suicide['Period'].apply(lambda x: int(x))
 
-    return df, df_pivot, df_country, df_gender, df_mh_adm, df_mh_fac, df_suicide
+    # Sunshine
+    df_sunshine = pd.read_excel('data/Cities_by_Sunshine_Duration_2019_wikipedia.xlsx')
+    df_sunshine = df_sunshine.groupby('Country').mean().reset_index()
+
+    return df, df_pivot, df_country, df_gender, df_mh_adm, df_mh_fac, df_suicide, df_sunshine
 
 def app():
-    df, df_pivot, df_country, df_gender, df_mh_adm, df_mh_fac, df_suicide = load_data()
+    df, df_pivot, df_country, df_gender, df_mh_adm, df_mh_fac, df_suicide, df_sunshine = load_data()
 
     st.title('Contributing Factors')
 
@@ -296,6 +300,7 @@ def app():
         We used the suicide rate data per 100,000 people. [Add more .....]")
 
     def plot_suicide(df, suicide):
+        suicide = suicide[suicide['Dim1'] == 'Both sexes']
         suicide = suicide[['Location','FactValueNumeric', 'ParentLocation', 'Period']]
         suicide = suicide.rename(columns={'Location':'Country', 
                                         'FactValueNumeric':'SuicideRatePer100000'})
@@ -305,11 +310,37 @@ def app():
         happiness_suicide_merged = df.merge(suicide, left_on=['Country name', 'year'], right_on=['Country', 'Period'], how='inner')
 
         fig = px.scatter(happiness_suicide_merged.dropna(), x="SuicideRatePer100000", y="Happiness Score", hover_name='Country name', 
-                color="region", range_x=(0,100), animation_frame='year',
+                color="region", range_x=(0,40), animation_frame='year',
                 category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         return fig
 
     st.plotly_chart(plot_suicide(df, df_suicide))
+
+    st.write("TODO: Add writeup")
+
+
+
+    st.text("")
+    st.markdown('### Sunshine Hours')
+
+    st.write("In this section, we examine the correlation between sunshine hours and happiness. \
+        We consider data for the year 2019 [Add more .....]")
+
+    def plot_sunshine(happiness_df, sunshine):
+        sunshine = sunshine[['Country','Year']]
+        sunshine = sunshine.rename(columns={'Year':'YearlySunshineHours'})
+        sunshine['Country'] = sunshine['Country'].str.strip()
+        
+        happiness_df_with_continent = happiness_df.join(df_country.set_index('country'), on='Country')
+
+        happiness_sunshine_merged = happiness_df_with_continent.merge(sunshine, on='Country', how='inner')
+        happiness_sunshine_merged = happiness_sunshine_merged.rename(columns={'2019':'Happiness'})
+
+        fig = px.scatter(happiness_sunshine_merged.dropna(), x="YearlySunshineHours", y="Happiness", hover_name='Country', color="region",
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
+        return fig
+
+    st.plotly_chart(plot_sunshine(df_pivot, df_sunshine))
 
     st.write("TODO: Add writeup")
 
