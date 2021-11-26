@@ -10,20 +10,34 @@ def app():
     st.markdown("# Happiness Around the World")
 
     st.markdown("### Is it measurable?")
-    st.write("Happiness is one of the key factors that relates to success, satisfaction, and a sense of well-being for human beings. Even after a person achieves great things in life, like money, fame, or success in the field they're in, a real sense of achievement in life is not complete unless people are happy with their lives, which often comes from a sense of community support, having a purpose to live, and so on.")
-    st.write("In this report, we analyse the World Happiness Report [1] dataset as our base dataset, which is a global survey being conducted for over 10 years across the globe in 140+ countries, and is published by the Sustainable Development Solutions Network, powered by data from the Gallup World Poll and Lloyd’s Register Foundation.")
-    st.write("We do exploratory data analysis to look for completeness, duplicates, outliers, and pairwise correlations for all of the different metrics they report.")
-    st.write("We further add additional datasets on gender inequality [2], human development index [3], and suicide rates [4] obtained from United Nations' and World Health Organization's websites, and do correlation studies to build preliminary hypotheses that can help us identify what factors explain self-reported happiness the best, why some countries always rank higher than others on the happiness scale, and so on. ")
+    st.write("Happiness is one of the key factors that relates to success, satisfaction, \
+        and a sense of well-being for human beings. Even after a person achieves great things in life, \
+        like money, fame, or success in the field they're in, a real sense of achievement in life is not \
+        complete unless people are happy with their lives, which often comes from a sense of community support, \
+        having a purpose to live, and so on.")
+    st.write("In this report, we analyse the World Happiness Report [1] dataset as our base dataset, \
+        which is a global survey being conducted for over 10 years across the globe in 140+ countries, \
+        and is published by the Sustainable Development Solutions Network, powered by data from \
+        the Gallup World Poll and Lloyd’s Register Foundation.")
+    st.write("We do exploratory data analysis to look for completeness, duplicates, outliers, \
+        and pairwise correlations for all of the different metrics they report.")
+    st.write("We further add additional datasets on gender inequality [2], human development index [3], \
+        and suicide rates [4] obtained from United Nations' and World Health Organization's websites, \
+        and do correlation studies to build preliminary hypotheses that can help us identify what factors \
+        explain self-reported happiness the best, why some countries always rank higher than others on \
+        the happiness scale, and so on. ")
     
-    st.markdown("## Worldwide Happiness Index")
-    st.write("The map below shows the happiness index for each country throughout the year 2010 untul 2019. From the map we can see that countries in Europe, America, and Australia generally have higher happiness index than countries in Asia and Africa.")
+    st.markdown("### Worldwide Happiness Index")
+    st.write("The map below shows the happiness index for each country throughout the year 2010 untul 2019. \
+        From the map we can see that countries in Europe, America, and Australia generally have higher happiness index \
+        than countries in Asia and Africa.")
 
     st.plotly_chart(world_map(df))
 
-    st.markdown("[1] https://worldhappiness.report/")
-    st.markdown("[2] http://hdr.undp.org/en/indicators/137906")
-    st.markdown("[3] http://hdr.undp.org/en/indicators/137506")
-    st.markdown("[4] https://www.who.int/data/gho/data/themes/mental-health/suicide-rates")
+    st.write("What are the the contributing factors affecting happiness? \
+     How did the happiness index change over the years? \
+     Does a contry's happiness index correlate with major political events in that country? \
+     In the following sections we are going to explore and discuss these questions." )
 
 @st.cache
 def load_data():
