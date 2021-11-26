@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
 import math
+import missingno
 import seaborn as sns
 from plotly.subplots import make_subplots
 
@@ -47,17 +48,19 @@ def load_data():
     df['GDP per capita'] = df['Log GDP per capita'].map(lambda x: math.exp(x))
     df = df.rename(columns= {'Life Ladder':'Happiness Score'})
 
-    return df, df_happy, df_country
+    # HDI
+    df_hdi = pd.read_csv('data/hdi19.csv')
+
+    return df, df_happy, df_country, df_hdi
 
 def app():
-    df, df_happy, df_country = load_data()
+    df, df_happy, df_country, df_hdi = load_data()
 
     st.title('Dataset')
 
-    st.markdown('## Data Source')
+    st.markdown('### Data Source')
 
-    st.markdown('### World Happiness Report')
-    st.markdown("[1] https://worldhappiness.report/")
+    st.markdown('##### World Happiness Report')
     st.write("""
         The World Happiness Report is a publication of the United Nations Sustainable Development Solutions Network. 
         This report contains articles and rankings of national happiness, based on respondent ratings of their own lives,
@@ -76,17 +79,157 @@ def app():
         The affect measures lie between 0 and 1.
         """)
 
-    st.markdown('### Secondary Datasets')
+    st.markdown('##### Secondary Datasets')
     # TODO Explain secondary datasets
+    st.write('TODO')
+
+
+    st.markdown("[1] https://worldhappiness.report/")
     st.markdown("[2] http://hdr.undp.org/en/indicators/137906")
     st.markdown("[3] http://hdr.undp.org/en/indicators/137506")
     st.markdown("[4] https://www.who.int/data/gho/data/themes/mental-health/suicide-rates")
+    st.markdown("[5] https://worldpopulationreview.com/country-rankings/hdi-by-country")
+    st.markdown("[6] https://en.wikipedia.org/wiki/List_of_countries_by_United_Nations_geoscheme")
+    # TODO add more that we've used
 
-    # TODO Add 4C
+
+
+    # TODO Add 4C: Completeness, Coherence, Correctness, aCcountability
+    st.text("")
+    st.markdown('###  Data Quality')
+    st.write('TODO: 4C')
+
+
 
     # TODO Add analysis of missing data, duplicates, etc
+    st.text("")
+    st.markdown('###  Initial Exploration')
+    st.markdown('##### Analysis of Missing Data')
+    st.write('We first look at our whole table to check if there is any jarring nullity that warrants dropping some columns.')
 
-    st.markdown('## Happiness Index by Country')
+    def preview_nulls(df):
+        # generate preview of entries with null values
+        if df.isnull().any(axis=None):
+            print("\nPreview of data with null values:")
+            fig = missingno.matrix(df).figure
+            return fig
+
+    st.pyplot(preview_nulls(df_happy))
+
+    st.write('While the overall data seems reliably populated from the above chart, we note that surveys might not be \
+        conducted or complete in some countries in some years.')
+
+    st.write('As such, since the main metric we want to study is the happiness index, given by the Life Ladder score, \
+        we further check the nullity over years of the happiness index for each country, by pivoting our data appropriately \
+            to have countries as rows, years as columns, and values as the happiness index')
+
+    happiness_df = df_happy.pivot_table(index="Country name", columns="year", values="Life Ladder").reset_index()
+    st.pyplot(preview_nulls(happiness_df))
+
+    st.write("""
+        We find that the happiness report survey data is extremely sparse for 2005 - 2009, and 2020. Therefore, we make a \
+            conscious decision of removing these years from all our analysis and restrict to a decade worth of more reliable \
+                data found in the 2010 to 2019 survey results.
+
+        Considering that a country might consistently score low or high on the happiness scale, this also drives a decision \
+            to make sure we only present aggregate metrics over years for a subset of countries that have data for all years, \
+                as comparing 2019 overall averages with 2020 averages given 2020 doesn't have a subset of low scoring countries \
+                    would be fallacious. 
+
+        Therefore, all global averages mentioned in the report automatically refer to a subset. When looking at individual \
+            countries in multiples of line plots, the disconnections between the lines will signify the unavailability of data \
+                instead.
+    """)
+
+    st.text("")
+    st.markdown('##### Statistical Analysis of Numerical Metrics')
+    st.write('Next, we look at a quick statistical analysis of our numerical columns to see if anything stands out as an \
+        outlier and might be worth removing.')
+
+    def stats(df): 
+        df = df.describe().drop(columns=["year"])
+        return df
+
+    st.dataframe(stats(df_happy))
+
+    # TODO: Maybe add a dropdown for each attribute so that it won't be too long?
+    columns = df_happy.columns.tolist()
+    columns.remove('year')
+    columns.remove('Country name')
+    column = st.selectbox('Attribute', columns)
+
+    fig = px.box(df_happy, x="year", y=column, hover_data=["Country name"], points="all")
+    st.plotly_chart(fig)
+    
+
+    st.text("")
+    st.markdown('##### Pairwise Correlations of Numerical Metrics')
+    st.markdown('Looking at the pairwise correlations of all metrics with each other for all countries for the decade 2010-2020, \
+        we find that GDP, Life Expectancy, and Social Support are **on average most heavily correlated with the Life Ladder \
+        happiness index.**')
+
+    fig = plt.figure()
+    sns.heatmap(df_happy.corr(), cmap="coolwarm_r")
+    st.pyplot(fig)
+
+    st.markdown("""
+        **However, we hypothesize that these correlations might vary significantly with the standard of living in different \
+            countries and the general ability of people to fight for survival versus being able to take a safe and healthy \
+                environment as a given.**
+
+        To test this hypothesis, we turn to looking at **Human Development Index** as a way to categorize countries.
+
+        The Human Development Index (HDI) is compiled by the United Nations Development Programme (UNDP) for 189 countries on \
+            an annual basis. The index considers the health, education and income in a given country to provide a measure of \
+                human development which is comparable between countries and over time. 
+    """)
+
+    st.markdown("""
+        The International Monetary Fund (IMF) categorizes "developed countries" have an HDI score of 0.8 or above [5] \
+            (in the very high human development tier). These countries have stable governments, widespread education, \
+                healthcare, high life expectancies, and growing, powerful economies.
+    """)
+
+    st.markdown("""
+    **Developed Countries**
+
+    For developed countries with high Human Development Indices, happiness is positively correlated to many factors like \
+        social support, freedom to make life choices, generosity, etc. Further, perceptions of corruption is highly negatively \
+            correlated with happiness index, showing that people care about politics, who the country's leaders are, and are aware \
+                enough to know what might be affecting their access to peace and standard of living on a daily basis.
+
+    This shows that when basic needs like economy (as measured by GDP) and health (as measured by life expectancy) are in good shape, \
+        people start caring about a well-rounded life and factors like generosity, social support systems, polotiical influences, and \
+            other nuanced factors to happiness.
+    """)
+
+    developed_countries = list(df_hdi[df_hdi["hdi2019"] >= 0.8]["country"])
+    region_df = df_happy[df_happy["Country name"].isin(developed_countries)]
+    fig = plt.figure()
+    sns.heatmap(region_df.corr(), cmap="coolwarm_r")
+    st.pyplot(fig)
+
+    st.markdown("""
+    **Developing Countries**
+
+    Through the below heatmap, we see that as we move towards developing countries with lower Human Development Indices, \
+        happiness is positively only correlated to per capita GDP and Life Expectancy at birth, i.e., the economy and health \
+            systems play the most significant roles as people's happiness depends on their ability to get by and make a living \
+                and work towards a respectable standard of living.
+
+    Things like generosity, or social support are effectively first world problems that don't really factor into general happiness \
+        for most people.
+    """)
+
+    developing_countries = list(df_hdi[df_hdi["hdi2019"] < 0.7]["country"])
+    region_df = df[df["Country name"].isin(developing_countries)]
+    fig = plt.figure()
+    sns.heatmap(region_df.corr(), cmap="coolwarm_r")
+    st.pyplot(fig)
+
+
+    st.text("")
+    st.markdown('##### Happiness Score Trend by Country')
     st.write('Here, we are going to see the happiness index trend for each country in its respective region. \
     To get the region (continent) and sub-region for each country, we joined the happiness index dataset with \
     the United Nations (UN) geoscheme data. There are several countries which have inconsistent names so we manually \
@@ -110,7 +253,7 @@ def app():
 
     if option2 == 'Asia & Oceania':
     
-        fig, ax = plt.subplots(3, 2, figsize=(30, 16))
+        fig, ax = plt.subplots(3, 2, figsize=(18, 14))
         plot_line_chart(0, 0, "Central Asia")
         plot_line_chart(0, 1, "Eastern Asia")
         plot_line_chart(1, 0, "South-eastern Asia")
@@ -126,7 +269,7 @@ def app():
 
     elif option2 == 'Europe':
 
-        fig, ax = plt.subplots(2, 2, figsize=(20, 7))
+        fig, ax = plt.subplots(2, 2, figsize=(16, 8))
 
         plot_line_chart(0, 0, "Eastern Europe")
         plot_line_chart(0, 1, "Northern Europe")
@@ -140,7 +283,7 @@ def app():
         but three of them have a mediocore index.')
 
     elif option2 == 'America':
-        fig, ax = plt.subplots(2, 2, figsize=(14, 7))
+        fig, ax = plt.subplots(2, 2, figsize=(14, 8))
 
         plot_line_chart(0, 0, "Northern America")
         plot_line_chart(0, 1, "Central America")
@@ -151,7 +294,7 @@ def app():
         On the other hand, countries in the Carribean subregion have a moderately low happiness index.')
 
     elif option2 == 'Africa':
-        fig, ax = plt.subplots(3, 2, figsize=(21, 16))
+        fig, ax = plt.subplots(3, 2, figsize=(18, 14))
         plot_line_chart(0, 0, "Northern Africa")
         plot_line_chart(0, 1, "Eastern Africa")
         plot_line_chart(1, 0, "Middle Africa")
