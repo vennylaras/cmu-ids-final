@@ -280,7 +280,8 @@ def app():
 
         happiness_mental_health_facilities_merged = happiness_df_with_continent.merge(x, on='Country', how='inner')
         happiness_mental_health_facilities_merged = happiness_mental_health_facilities_merged.rename(columns={'2019':'Happiness'})
-        fig = px.scatter(happiness_mental_health_facilities_merged.dropna(), x="MentalHealthFacilitiesPer100000", y="Happiness", hover_name='Country', range_x=(0,1), color="region")
+        fig = px.scatter(happiness_mental_health_facilities_merged.dropna(), x="MentalHealthFacilitiesPer100000", y="Happiness", hover_name='Country', 
+                range_x=(0,1), color="region", category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         return fig
 
     st.plotly_chart(plot_mental_health_facilities(df_pivot, df_mh_fac))
@@ -324,7 +325,7 @@ def app():
     st.markdown('### Sunshine Hours')
 
     st.write("In this section, we examine the correlation between sunshine hours and happiness. \
-        We consider data for the year 2019 [Add more .....]")
+        We consider data for the yearly sunshine hour avergae for the year 2019. [Add more .....]")
 
     def plot_sunshine(happiness_df, sunshine):
         sunshine = sunshine[['Country','Year']]
