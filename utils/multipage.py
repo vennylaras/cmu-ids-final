@@ -39,3 +39,7 @@ class MultiPage:
 
         # run the app function 
         page['function']()
+
+class MultiPageNavBar: 
+    """ Create multi-page Nav Bar on the top for easy navigation, reserve sidebar for filters """
+    pass
