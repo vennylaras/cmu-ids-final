@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Custom imports 
-from util.multipage import MultiPage
+from utils.multipage import MultiPage
 from pages import home, dataset, analysis, case
 
 # Create an instance of the app 
