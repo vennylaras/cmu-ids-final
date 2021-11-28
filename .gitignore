@@ -2,6 +2,9 @@
 .idea/
 __pycache__/
 
+#VSCode
+.vscode/
+
 # JupyterNotebooks
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
