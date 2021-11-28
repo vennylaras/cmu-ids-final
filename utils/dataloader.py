@@ -1,3 +1,4 @@
+from matplotlib.pyplot import show
 import streamlit as st
 import pandas as pd
 import math
@@ -5,7 +6,7 @@ import seaborn as sns
 from plotly.subplots import make_subplots
 
 # Read File 
-@st.cache
+@st.cache(show_spinner=False, suppress_st_warning=True)
 def load_data():
     # Happiness data
     df = pd.read_excel('data/HappinessScores.xls')
