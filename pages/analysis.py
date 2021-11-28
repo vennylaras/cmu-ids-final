@@ -3,6 +3,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import math
 import seaborn as sns
@@ -325,7 +326,7 @@ def app():
     st.markdown('### Sunshine Hours')
 
     st.write("In this section, we examine the correlation between sunshine hours and happiness. \
-        We consider data for the yearly sunshine hour avergae for the year 2019. [Add more .....]")
+        We consider data for the yearly sunshine hour average for the year 2019.")
 
     def plot_sunshine(happiness_df, sunshine):
         sunshine = sunshine[['Country','Year']]
@@ -339,10 +340,34 @@ def app():
 
         fig = px.scatter(happiness_sunshine_merged.dropna(), x="YearlySunshineHours", y="Happiness", hover_name='Country', color="region",
                 category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
+
+        # Add annotations for a high happiness low sunshine country, and a low happiness, high sunshine country 
+        # to corroborate the inconclusivity of the correlation in the writeup
+        country = "Finland"
+        low_sunshine = happiness_sunshine_merged[happiness_sunshine_merged["Country"] == country]["YearlySunshineHours"].values[0]
+        high_happiness = happiness_sunshine_merged[happiness_sunshine_merged["Country"] == country]["Happiness"].values[0]
+        fig.add_annotation(x=low_sunshine, y=high_happiness, text=country, showarrow=True, arrowhead=1)
+
+        country = "Egypt"
+        high_sunshine = happiness_sunshine_merged[happiness_sunshine_merged["Country"] == country]["YearlySunshineHours"].values[0]
+        low_happiness = happiness_sunshine_merged[happiness_sunshine_merged["Country"] == country]["Happiness"].values[0]
+        fig.add_annotation(x=high_sunshine, y=low_happiness, text=country, showarrow=True, arrowhead=1)
+
         return fig
 
     st.plotly_chart(plot_sunshine(df_pivot, df_sunshine))
 
-    st.write("TODO: Add writeup")
+    st.markdown("""
+        **Well, not everything has a correlation!**
+
+        Though research suggests that lack of sunshine is a leading cause of depression and anxiety [TODO: Add citations], 
+        we don't find any marginal correlation between happiness and sunshine, since other factors like GDP and health systems play a more important role.
+
+        For example, consider Finland and Egypt (highlighed in the above chart for convenience). Finland is the happiest country in the world even as 
+        its residents fight cold and long for a healthy dose of sunshine for the most part of the year, while Egypt, a country that receives the 
+        highest sunshine in the world on average, ranks pretty low on the happiness scale.
+
+        This highlights how difficult it is to study happiness based on individual factors. It is a nuanced mixture of many factors!
+    """)
 
 
