@@ -31,15 +31,12 @@ class MultiPage:
 
     def run(self):
         # Drodown to select the page to run  
-        page = st.sidebar.selectbox(
-            'Navigation', 
+        st.sidebar.markdown("## Navigation")
+        page = st.sidebar.radio(
+            'Go to', 
             self.pages, 
             format_func=lambda page: page['title']
         )
 
         # run the app function 
         page['function']()
-
-class MultiPageNavBar: 
-    """ Create multi-page Nav Bar on the top for easy navigation, reserve sidebar for filters """
-    pass
