@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 
-from utils.dataloader import load_data
+from utils.dataloader import load_data, load_mvp_data
 
 def app():
     # Load a small bare minimum dataset on app load for faster load times
@@ -43,13 +43,7 @@ def app():
 
      # Load all data used on other pages and cache it for improved performance on navigating to these other pages
     load_data()
-
-@st.cache
-def load_mvp_data():
-    df = pd.read_excel('data/HappinessScores.xls')
-    years_to_keep = list(range(2010, 2020, 1))
-    df = df[df["year"].isin(years_to_keep)]
-    return df
+    
     
 def world_map(df):
     df_happy_sort_year = df.sort_values(by=['year'])

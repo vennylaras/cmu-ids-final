@@ -5,6 +5,13 @@ import math
 import seaborn as sns
 from plotly.subplots import make_subplots
 
+@st.cache
+def load_mvp_data():
+    df = pd.read_excel('data/HappinessScores.xls')
+    years_to_keep = list(range(2010, 2020, 1))
+    df = df[df["year"].isin(years_to_keep)]
+    return df
+    
 # Read File 
 @st.cache(show_spinner=False, suppress_st_warning=True)
 def load_data():
