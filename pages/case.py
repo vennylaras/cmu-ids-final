@@ -29,6 +29,10 @@ def app():
     st.markdown("## Venezuela")
     ven_df = df[df['Country name'] == 'Venezuela']
     fig = px.line(ven_df, x='year', y='Life Ladder', labels={"year": "Year", "Life Ladder": "Happiness Score"})
+    score = lambda year: ven_df[ven_df['year']==year]['Life Ladder'].values[0]
+    fig.add_annotation(x=2012, y=score(2012), text="Venezuela's crisis onset", showarrow=True, arrowhead=1)
+    fig.add_annotation(x=2013, y=score(2013), text="Basic food needs impacted", showarrow=True, arrowhead=1)
+    fig.add_annotation(x=2015, y=score(2015), text="Sharp increase in homicide rates", showarrow=True, arrowhead=1)
     st.plotly_chart(fig)
 
     st.write("Another example that suggests that socioeconomic and political factors might reflect in the happiness score trends of a country \
