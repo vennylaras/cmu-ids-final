@@ -1,9 +1,6 @@
-from matplotlib.pyplot import show
 import streamlit as st
 import pandas as pd
 import math
-import seaborn as sns
-from plotly.subplots import make_subplots
 
 @st.cache
 def load_mvp_data():

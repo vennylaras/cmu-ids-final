@@ -1,13 +1,11 @@
 import streamlit as st
 import plotly.express as px
-import matplotlib.pyplot as plt
 import missingno
-import seaborn as sns
 
 from utils.dataloader import load_data
 
 def app():
-    df, df_happy, _, _, df_hdi, _, _, _, _, _ = load_data()  # Sad way to code, might refactor later
+    _, df_happy, _, _, _, _, _, _, _, _ = load_data()  # Sad way to code, might refactor later
 
     st.title('Dataset')
 
@@ -118,149 +116,4 @@ def app():
     fig = px.box(df_happy, x="year", y=column, hover_data=["Country name"], points="all")
     st.plotly_chart(fig)
     
-
-    st.text("")
-    st.markdown('##### Pairwise Correlations of Numerical Metrics')
-    st.markdown('Looking at the pairwise correlations of all metrics with each other for all countries for the decade 2010-2020, \
-        we find that GDP, Life Expectancy, and Social Support are **on average most heavily correlated with the Life Ladder \
-        happiness index.**')
-
-    fig = plt.figure()
-    sns.heatmap(df_happy.corr(), cmap="coolwarm_r")
-    st.pyplot(fig)
-
-    st.markdown("""
-        **However, we hypothesize that these correlations might vary significantly with the standard of living in different \
-            countries and the general ability of people to fight for survival versus being able to take a safe and healthy \
-                environment as a given.**
-
-        To test this hypothesis, we turn to looking at **Human Development Index** as a way to categorize countries.
-
-        The Human Development Index (HDI) is compiled by the United Nations Development Programme (UNDP) for 189 countries on \
-            an annual basis. The index considers the health, education and income in a given country to provide a measure of \
-                human development which is comparable between countries and over time. 
-    """)
-
-    st.markdown("""
-        The International Monetary Fund (IMF) categorizes "developed countries" have an HDI score of 0.8 or above [5] \
-            (in the very high human development tier). These countries have stable governments, widespread education, \
-                healthcare, high life expectancies, and growing, powerful economies.
-    """)
-
-    st.markdown("""
-        **Developed Countries**
-
-        For developed countries with high Human Development Indices, happiness is positively correlated to many factors like 
-        social support, freedom to make life choices, generosity, etc. Further, perceptions of corruption is highly negatively 
-        correlated with happiness index, showing that people care about politics, who the country's leaders are, and are aware 
-        enough to know what might be affecting their access to peace and standard of living on a daily basis.
-
-        This shows that when basic needs like economy (as measured by GDP) and health (as measured by life expectancy) are in good shape, 
-        people start caring about a well-rounded life and factors like generosity, social support systems, polotiical influences, and 
-        other nuanced factors to happiness.
-    """)
-
-    developed_countries = list(df_hdi[df_hdi["hdi2019"] >= 0.8]["country"])
-    region_df = df_happy[df_happy["Country name"].isin(developed_countries)]
-    fig = plt.figure()
-    sns.heatmap(region_df.corr(), cmap="coolwarm_r")
-    st.pyplot(fig)
-
-    st.markdown("""
-        **Developing Countries**
-
-        Through the below heatmap, we see that as we move towards developing countries with lower Human Development Indices, 
-        happiness is positively only correlated to per capita GDP and Life Expectancy at birth, i.e., the economy and health 
-        systems play the most significant roles as people's happiness depends on their ability to get by and make a living 
-        and work towards a respectable standard of living.
-
-        Things like generosity, or social support are effectively first world problems that don't really factor into general happiness 
-        for most people.
-    """)
-
-    developing_countries = list(df_hdi[df_hdi["hdi2019"] < 0.7]["country"])
-    region_df = df_happy[df_happy["Country name"].isin(developing_countries)]
-    fig = plt.figure()
-    sns.heatmap(region_df.corr(), cmap="coolwarm_r")
-    st.pyplot(fig)
-
-
-    st.text("")
-    st.markdown('##### Happiness Score Trend by Country')
-    st.write("""
-        Here, we are going to see the happiness index trend for each country in its respective region. 
-        To get the region (continent) and sub-region for each country, we joined the happiness index dataset with 
-        the United Nations (UN) geoscheme data. There are several countries which have inconsistent names so we manually 
-        changed them before joining. Furthermore, there are five countries/territories present in the happiness dataset which 
-        are not present in the UN dataset, so we added them manually to their respective regions.
-    """)
-
-    def plot_line_chart(i, j, region): 
-        df_reg = df[df['sub-subregion'] == region]
-        df_reg = df_reg.pivot(index='year', columns='Country name', values='Happiness Score')
-        ax[i,j].plot(df_reg)
-        ax[i,j].set_title(region)
-        ax[i,j].set_ylim([2.0, 8.0])
-
-        box = ax[i,j].get_position()
-        ax[i,j].set_position([box.x0, box.y0, box.width * 0.75, box.height])
-        ax[i,j].legend(df_reg.columns.tolist(), loc='center left', bbox_to_anchor=(1, 0.5))
-
-
-    option2 = st.selectbox('Select a continent to see the happiness index by countries',\
-    ['Asia & Oceania', 'Europe', 'America', 'Africa'])
-
-    if option2 == 'Asia & Oceania':
-    
-        fig, ax = plt.subplots(3, 2, figsize=(18, 14))
-        plot_line_chart(0, 0, "Central Asia")
-        plot_line_chart(0, 1, "Eastern Asia")
-        plot_line_chart(1, 0, "South-eastern Asia")
-        plot_line_chart(1, 1, "Southern Asia")
-        plot_line_chart(2, 0, "Western Asia")
-        plot_line_chart(2, 1, "Australia and New Zealand")
-        
-        st.pyplot(fig)
-        st.write('Countries in Asia generally do not have significantly high or significantly low happiness index.\
-        In its subregion, countries in South Asia have a lower happiness index compared to other subregions in Asia.\
-        For Oceania, we only have data from two countries and both of them are in the Australia & New Zealand subregion \
-        and both countries have high happiness index.')
-
-    elif option2 == 'Europe':
-
-        fig, ax = plt.subplots(2, 2, figsize=(16, 8))
-
-        plot_line_chart(0, 0, "Eastern Europe")
-        plot_line_chart(0, 1, "Northern Europe")
-        plot_line_chart(1, 0, "Southern Europe")
-        plot_line_chart(1, 1, "Western Europe")
-        st.pyplot(fig)
-        st.write('Countries in Europe have an overall high happiness index score.\
-        Countries in the subregion West Europe have highest average happiness index compared to other regions \
-        and their happiness index score is pretty stable throughout the years. \
-        Countries in Northern Europe also have stable happiness index and several countries with significantly high happiness index,\
-        but three of them have a mediocore index.')
-
-    elif option2 == 'America':
-        fig, ax = plt.subplots(2, 2, figsize=(14, 8))
-
-        plot_line_chart(0, 0, "Northern America")
-        plot_line_chart(0, 1, "Central America")
-        plot_line_chart(1, 0, "South America")
-        plot_line_chart(1, 1, "Caribbean")
-        st.pyplot(fig)
-        st.write('The subregion North America have a significantly high happiness index while Central and South America have a moderately high happiness index.\
-        On the other hand, countries in the Carribean subregion have a moderately low happiness index.')
-
-    elif option2 == 'Africa':
-        fig, ax = plt.subplots(3, 2, figsize=(18, 14))
-        plot_line_chart(0, 0, "Northern Africa")
-        plot_line_chart(0, 1, "Eastern Africa")
-        plot_line_chart(1, 0, "Middle Africa")
-        plot_line_chart(1, 1, "Southern Africa")
-        plot_line_chart(2, 0, "Western Africa")
-        fig.delaxes(ax[2,1])
-        st.pyplot(fig)
-        st.write('Generally, we can see that countries in Africa have averagely lower happiness index compared to other continents.\
-        The index also seems to fluctuate a lot through out the years.')
 
