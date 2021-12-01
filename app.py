@@ -12,6 +12,7 @@ app.add_page("Home", home.app)
 app.add_page("Dataset", dataset.app)
 app.add_page("Analysis", analysis.app)
 app.add_page("Case Studies", case.app)
+app.add_page("PCA", case.app)
 
 # The main app
 app.run()
