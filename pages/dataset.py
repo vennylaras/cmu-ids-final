@@ -23,6 +23,7 @@ def app():
         - **Log GDP Per Capita:** A country's per capita GDP on log-scale
         - **Social Support:** Social support is the national average of the binary responses (either 0 or 1) to the Gallup World Poll (GWP) question “If you were in trouble, do you have relatives or friends you can count on to help you whenever you need them, or not?”
         - **Healthy Life Expectancy at Birth:** The expected life expectancy of an average human-being at birth
+        - **Freedom to make life choices:** TODO
         - **Generosity:** Generosity is the residual of regressing the national average of GWP responses to the question “Have you donated money to a charity in the past month?” on GDP per capita.
         - **Perceptions of Corruption:** It's the average of binary answers to two GWP questions: “Is corruption widespread throughout the government or not?” and “Is corruption widespread within businesses or not?” (Note: Where data for government corruption are missing, the perception of business corruption is used as the overall corruption-perception measure.)
         - **Positive affect:** It comprises the average frequency of happiness, laughter and enjoyment on the previous day
