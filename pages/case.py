@@ -6,7 +6,7 @@ import plotly.express as px
 from utils.dataloader import load_mvp_data
 
 def app():
-    df = load_mvp_data()
+    df, _ = load_mvp_data()
 	
     st.title('Case Studies')
     st.write("Apart from the attributes we explored in the dataset and factors discussed in further analysis, we believe that other, \

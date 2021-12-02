@@ -2,10 +2,10 @@ import streamlit as st
 import plotly.express as px
 import missingno
 
-from utils.dataloader import load_data
+from utils.dataloader import load_mvp_data
 
 def app():
-    _, df_happy, _, _, _, _, _, _, _, _ = load_data()  # Sad way to code, might refactor later
+    _, df_happy = load_mvp_data()
 
     st.title('Dataset')
 

@@ -5,18 +5,20 @@ import math
 @st.cache
 def load_mvp_data():
     df = pd.read_excel('data/HappinessScores.xls')
+    df_happy = df
     years_to_keep = list(range(2010, 2020, 1))
     df = df[df["year"].isin(years_to_keep)]
-    return df
+    return df, df_happy
     
 # Read File 
 @st.cache(show_spinner=False, suppress_st_warning=True)
 def load_data():
     # Happiness data
     df = pd.read_excel('data/HappinessScores.xls')
+    df_happy = df
+
     years_to_keep = list(range(2010, 2020, 1))
     df = df[df["year"].isin(years_to_keep)]
-    df_happy = df
 
     # Country data
     df_country = pd.read_excel('data/un_geoscheme.xlsx')
@@ -53,9 +55,6 @@ def load_data():
 
     # Pivoted
     df_pivot = df.pivot_table(index="Country name", columns="year", values="Happiness Score").reset_index()
-    df_pivot = df_pivot.rename(columns={2019:'2019'})[['Country name', '2019']]
-    df_pivot = df_pivot.rename(columns={'Country name':'Country'})
-    df_pivot['Country'] = df_pivot['Country'].str.strip()
 
     # Gender
     df_gender = pd.read_excel('data/Gender Development Index (GDI).xlsx')

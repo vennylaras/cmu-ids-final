@@ -7,7 +7,7 @@ from utils.dataloader import load_data, load_mvp_data
 
 def app():
     # Load a small bare minimum dataset on app load for faster load times
-    df = load_mvp_data()
+    df, _ = load_mvp_data()
 
     st.markdown("# Happiness Around the World")
 
