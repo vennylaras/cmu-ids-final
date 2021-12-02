@@ -16,7 +16,7 @@ def app():
         The World Happiness Report is a publication of the United Nations Sustainable Development Solutions Network. 
         This report contains articles and rankings of national happiness, based on respondent ratings of their own lives,
         which the report also correlates with various quality of life factors.""")
-    st.dataframe(df_happy)
+    # st.dataframe(df_happy)
     st.markdown("""
         Here is a brief description of  these columns collected from the Gallup World Poll (GWP): 
         - **Life Ladder:** The average happiness index
@@ -36,11 +36,14 @@ def app():
 
 
     st.markdown("[1] https://worldhappiness.report/")
-    st.markdown("[2] http://hdr.undp.org/en/indicators/137906")
-    st.markdown("[3] http://hdr.undp.org/en/indicators/137506")
-    st.markdown("[4] https://www.who.int/data/gho/data/themes/mental-health/suicide-rates")
-    st.markdown("[5] https://worldpopulationreview.com/country-rankings/hdi-by-country")
-    st.markdown("[6] https://en.wikipedia.org/wiki/List_of_countries_by_United_Nations_geoscheme")
+    st.markdown("[2] http://hdr.undp.org/en/indicators/137506") # HDI
+    st.markdown("[3] https://worldpopulationreview.com/country-rankings/hdi-by-country") # also HDI, which one are we using??
+    st.markdown("[4] http://hdr.undp.org/en/indicators/137906") # gender development index
+    st.markdown("[4] https://www.who.int/data/gho/data/themes/mental-health/suicide-rates") # suicide
+    st.markdown("[6] https://www.who.int/data/gho/data/indicators/indicator-details/GHO/mental-health-outpatient-facilities-(per-100-000)") # mental health facilities
+    st.markdown("[7] https://www.who.int/data/gho/data/indicators/indicator-details/GHO/mental-hospital-admissions-(per-100-000)") # mental health admissions
+    st.markdown("[8] https://data.world/makeovermonday/2019w44") # sunshine
+    st.markdown("[9] https://en.wikipedia.org/wiki/List_of_countries_by_United_Nations_geoscheme") # countries and regions
     # TODO add more that we've used
 
 

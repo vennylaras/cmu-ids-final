@@ -7,7 +7,7 @@ from utils.dataloader import load_data
 def app():
     df, df_happy, df_country, df_pivot, df_hdi, df_gender, df_mh_adm, df_mh_fac, df_suicide, df_sunshine = load_data()
 
-    st.title('Happiness Around the World')
+    st.title('Analysis')
 
     st.text("")
     st.markdown('### Happiness Index by Country')   
@@ -162,13 +162,16 @@ def app():
     """)
 
     st.markdown("""
-        The International Monetary Fund (IMF) categorizes "developed countries" have an HDI score of 0.8 or above [5] \
+        The International Monetary Fund (IMF) categorizes "developed countries" have an HDI score of 0.8 or above\
             (in the very high human development tier). These countries have stable governments, widespread education, \
                 healthcare, high life expectancies, and growing, powerful economies.
     """)
 
-
-    with st.expander("Developed Countries"):
+    hdi_option = st.selectbox('Select HDI category',\
+    ['Developed Countries', 'Developing Countries'])
+    
+    if hdi_option == 'Developed Countries':
+    # with st.expander("Developed Countries"):
         st.markdown("""
             **Developed Countries**
 
@@ -187,7 +190,8 @@ def app():
         fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
         st.plotly_chart(fig)
 
-    with st.expander("Developing Countries"):
+    else:
+    # with st.expander("Developing Countries"):
         st.markdown("""
             **Developing Countries**
 
@@ -212,7 +216,7 @@ def app():
     The first graph below describes yearly change of the selected feature in each continent given in our main happiness dataset, and\
     the second graph shows the correlation between each feature and the happiness score for each year.')
 
-    option = st.selectbox('Feature that explains Happiness Index',\
+    option = st.selectbox('Quality of Life Factors',\
     ['Log GDP per Capita', 'Social Support', 'Healthy Life Expectancy at Birth',\
     'Freedom to Make Life Choices', 'Generosity','Perceptions of corruption'])
 
@@ -336,7 +340,8 @@ def app():
 
     st.text("")
     st.markdown('### Other Factors')
-    st.write('TODO: write about we now correlate happiness index with external datasets.')
+    st.write("Now we are going to look at other factors outside of the quality life factors from the original World Happiness Report. \
+        We analyzed several additional datasets to see if there is a correlation between these factors with happiness index.")
 
     st.markdown('##### Gender Disparity')
 

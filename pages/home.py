@@ -17,15 +17,12 @@ def app():
         like money, fame, or success in the field they're in, a real sense of achievement in life is not \
         complete unless people are happy with their lives, which often comes from a sense of community support, \
         having a purpose to live, and so on.")
-    st.write("In this report, we analyse the World Happiness Report [1] dataset as our base dataset, \
+    st.write("In this report, we analyse the World Happiness Report dataset as our base dataset, \
         which is a global survey being conducted for over 10 years across the globe in 140+ countries, \
         and is published by the Sustainable Development Solutions Network, powered by data from \
         the Gallup World Poll and Lloyd’s Register Foundation.")
-    st.write("We do exploratory data analysis to look for completeness, duplicates, outliers, \
-        and pairwise correlations for all of the different metrics they report.")
-    st.write("We further add additional datasets on gender inequality [2], human development index [3], \
-        and suicide rates [4] obtained from United Nations' and World Health Organization's websites, \
-        and do correlation studies to build preliminary hypotheses that can help us identify what factors \
+    st.write("We further add additional datasets on gender inequality, human development index, \
+        suicide rates, and sunshine hours, and do correlation studies that can help us identify what factors \
         explain self-reported happiness the best, why some countries always rank higher than others on \
         the happiness scale, and so on. ")
     
