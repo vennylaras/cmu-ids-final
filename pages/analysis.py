@@ -54,6 +54,12 @@ def app():
         are not present in the UN dataset, so we added them manually to their respective regions.
     """)
 
+    st.write("""
+        Overall, we observed that countries in Europe, Americas, and Oceania have a relatively higher happiness score
+        compared to countries in Asia and Africa. The happiness index for those 3 regions throughout the years are also more
+        stable than Asia and Africa.
+    """)
+
     def plot_line_chart(region): 
         df_reg = df[df['sub-subregion'] == region]
         df_reg = df_reg.pivot(index='year', columns='Country name', values='Happiness Score')
@@ -184,7 +190,7 @@ def app():
             enough to know what might be affecting their access to peace and standard of living on a daily basis.
 
             This shows that when basic needs like economy (as measured by GDP) and health (as measured by life expectancy) are in good shape, 
-            people start caring about a well-rounded life and factors like generosity, social support systems, polotiical influences, and 
+            people start caring about a well-rounded life and factors like generosity, social support systems, political influences, and 
             other nuanced factors to happiness.
         """)
 
@@ -203,8 +209,8 @@ def app():
             systems play the most significant roles as people's happiness depends on their ability to get by and make a living 
             and work towards a respectable standard of living.
 
-            Things like generosity, or social support are effectively first world problems that don't really factor into general happiness 
-            for most people.
+            Things like generosity, or freedom to make life choices are effectively first world problems that don't really factor 
+            into general happiness for most people.
         """)
 
         developing_countries = list(df_hdi[df_hdi["hdi2019"] < 0.7]["country"])
@@ -223,22 +229,26 @@ def app():
     ['Log GDP per Capita', 'Social Support', 'Healthy Life Expectancy at Birth',\
     'Freedom to Make Life Choices', 'Generosity','Perceptions of corruption'])
 
-    ## 1
+    ## 2
     # Social Support vs. Year
 
     if option == 'Social Support':
         # st.markdown('### Social Support')
-        df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)]
-        df1 = df1.groupby(['region','year'])[['Social support']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1, x="Year", y="Social support", color = 'region',title='Social Support by Year',
-                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
-        st.plotly_chart(fig)
 
         st.write('This graph shows the yearly change in social support that was available in each continent in the past years. \
             There is small change in social support of America, Europe, and Oceania while the social support in Asia and Africa has decreased.\
             Especially around 2014, both Asia and Africa reach the lowest social support.')
+
+        df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)]
+        df1 = df1.groupby(['region','year'])[['Social support']].mean().reset_index().rename(columns = {'year':'Year'})
+        fig = px.line(df1, x="Year", y="Social support", color = 'region',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
+        st.plotly_chart(fig)
+
         
-        st.write('We can see a positive correlation between happiness index and social support, with Europe leading in the top right quadrant and Africa in the lower quadrant.')
+        st.write("""We can see a positive correlation between happiness index and social support, 
+        with Europe, Americas, and Oceania leading in the top right quadrant, Asia spread out in the middle,
+        and Africa in the lower quadrant.""")
 
         fig = px.scatter(df.dropna(), x="Social support", y="Happiness Score", animation_frame="year", size='GDP per capita',
                 color="region", hover_name="Country name",
@@ -246,18 +256,22 @@ def app():
         st.plotly_chart(fig)
 
 
-    ## 2
+    ## 3
     # Health Life Expectancy at Birth vs. Year
     elif option == 'Healthy Life Expectancy at Birth':
         # st.markdown('### Healthy Life Expectancy at Birth')
+        st.write('In general, healthy life expectancy at birth increases in all continents. Especially, the value in Africa increases the fastest.')
+
         df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
         df1 = df1.groupby(['region','year'])[['Healthy life expectancy at birth']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1.dropna(), x="Year", y="Healthy life expectancy at birth", color = 'region',title='Healthy Life Expectancy at Birth by Year',
+        fig = px.line(df1.dropna(), x="Year", y="Healthy life expectancy at birth", color = 'region',
                 category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
 
-        st.write('In general, healthy life expectancy at birth increases in all continents. Especially, the value in Africa increases the fastest.')
-        st.write('There is a positive correlation between life expectancy and happiness index, with similar region distribution.')
+        st.write("""There is a positive correlation between healthy life expectancy and happiness index. 
+        All four continents beside Africa occupy the top right quadrant while Africa in the lower left,
+        which suggested that the lower health life expectancy rate in Africa is one of the contributing factors
+        of why happiness index scores are generally low in African countries.""")
         
         fig = px.scatter(df.dropna(), x="Healthy life expectancy at birth", y="Happiness Score", animation_frame="year", size='GDP per capita',
                 color="region", hover_name="Country name",
@@ -265,61 +279,76 @@ def app():
         st.plotly_chart(fig)
         
 
-    ## 3
+    ## 1
     # Log GDP per Capita vs. Year
     elif option == 'Log GDP per Capita':
         # st.markdown('### Gross Domestic Product')
-        df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
-        df1 = df1.groupby(['region','year'])[['Log GDP per capita']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1.dropna(), x="Year", y="Log GDP per capita", color = 'region',title='GDP by Year',
-                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
-        st.plotly_chart(fig)
         st.write('In general, log GDP per capita slowly increases in all continents.')
 
-        st.write('There is a positive correlation between Happiness Index and GDP,\
-        the higher the GDP, the likelier it is to have a high happiness index score.\
-        Countries in Europe occupy the top right quadrant and are quite stable throughout the years. \
-        African countries, on the other hand, occupy the lower left of the quadrant.')
+        df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
+        df1 = df1.groupby(['region','year'])[['Log GDP per capita']].mean().reset_index().rename(columns = {'year':'Year'})
+        fig = px.line(df1.dropna(), x="Year", y="Log GDP per capita", color = 'region',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
+        st.plotly_chart(fig)
+
+        st.write("""There is a positive correlation between Happiness Index and GDP,
+        the higher the GDP, the likelier it is to have a high happiness index score.
+        Countries in Europe occupy the top right quadrant and are quite stable throughout the years. 
+        African countries, on the other hand, occupy the lower left of the quadrant.
+        For example, in 2019 the country with the highest GDP, Luxembourg, has a relatively high happiness index at 7.4,
+        while the country with lowest GDP, Malawi, has a relatively low happiness index at approximately 3.9.""")
+
+        st.write("""Just like the happiness score, we can see that countries in Europe, Americas, and Ocenia 
+        have less fluctuative GDP per capita throughout the years compared to countries in Africa and Asia.
+        This might be because most countries in those three regions are developed countries while countries in
+        Asia and Africa are developing countries.""")
 
         fig = px.scatter(df.dropna(), x="Log GDP per capita", y="Happiness Score", animation_frame="year",
                 color="region", hover_name="Country name",
                 category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
 
-    ## 4
-    # Generosity vs. Year
+    ## 5
+    # Generosity
     elif option == 'Generosity':
         # st.markdown('### Generosity')
+        st.write('Generosity fluctuates and slowly decreases by 2018, however it slightly increases in all continents after 2018.')
+
         df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
         df1 = df1.groupby(['region','year'])[['Generosity']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1.dropna(), x="Year", y="Generosity", color = 'region',title='Generosity by Year',
+        fig = px.line(df1.dropna(), x="Year", y="Generosity", color = 'region',
                 category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
-        st.write('Generosity fluctuates and slowly decreases by 2018; however it slightly increases in all continents after 2018.')
-
-        st.write('There is a slight positive correlation between happiness index and generosity.\
-        There is also no significant difference between each region.')
+        
+        st.write("""Overall, it seems like there is no correlation between happiness index and generosity.
+        Focusing on the region Europe, we can see a slightly positive correlation between happiness index and generosity.
+        However, when we look at other regions, there seem to be no correlation. 
+        Especially if we look at Asia, which seem pretty scattered thouhout the plot.
+        Throughout the decade, Asian countries are always the top country in terms of genersity score,
+        but those countries do not have a high happiness index.""")
 
         fig = px.scatter(df.dropna(), x="Generosity", y="Happiness Score", animation_frame="year", size='GDP per capita',
                 color="region", hover_name="Country name",
                 category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
 
-    ## 5
+    ## 4
     # Freedom to make a life choices vs. Year
     elif option == 'Freedom to Make Life Choices':
         # st.markdown('### Freedom to Make Life Choices')
-        df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
-        df1 = df1.groupby(['region','year'])[['Freedom to make life choices']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1.dropna(), x="Year", y="Freedom to make life choices", color = 'region',title='Freedom to make life choices change by Year',
-                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
-        st.plotly_chart(fig)
+
         st.write('Freedom to make a life choices increase in all continents; however, in 2012, this feature reaches the lowest point in Asia and Africa')
 
-        st.write('Throughout the years, the score for freedom to make life choices increased overall, \
-        with the trend of all countries moving towards the right side of the graph.\
-        There also seems to be a positive correlation between happiness index and freedom to make life choices.\
-        However, the difference between regions is not as significant.')
+        df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
+        df1 = df1.groupby(['region','year'])[['Freedom to make life choices']].mean().reset_index().rename(columns = {'year':'Year'})
+        fig = px.line(df1.dropna(), x="Year", y="Freedom to make life choices", color = 'region',
+                category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
+        st.plotly_chart(fig)
+        
+        st.write("""Throughout the years, the score for freedom to make life choices increased overall,
+        with the trend of all countries moving towards the right side of the graph.
+        There also seems to be a positive correlation between happiness index and freedom to make life choices.
+        However, the difference between regions is not significant, with countries from all regions scattered throughout the plot.""")
 
         fig = px.scatter(df.dropna(), x="Freedom to make life choices", y="Happiness Score", animation_frame="year", size='GDP per capita',
                 color="region", hover_name="Country name",
@@ -330,16 +359,21 @@ def app():
     # Perceptions of corruption vs. Year
     else:
         # st.markdown('### Perceptions of Corruption')
+
+        st.write("""Except for Asia and Africa, this feature slightly increases in entire continents.
+        We can also observe that the region Oceania have a significantly lower perceptions of corruption compared to other regions.""")
+
         df1 = df.loc[(df.year >= 2010) & (df.year <= 2019)].dropna()
         df1 = df1.groupby(['region','year'])[['Perceptions of corruption']].mean().reset_index().rename(columns = {'year':'Year'})
-        fig = px.line(df1.dropna(), x="Year", y="Perceptions of corruption", color = 'region',title='Perceptions of corruption change by Year',
+        fig = px.line(df1.dropna(), x="Year", y="Perceptions of corruption", color = 'region',
                 category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         st.plotly_chart(fig)
-        st.write('Except for Asia and Africa, this feature slightly increases in entire continents.')
 
-        st.write('From the scatterplot we can see that there is a negative correlation between happiness index and perceptions of corruption, \
-        the lower the corruption score, the higher the happiness index is likely to be. \
-        There is also no clear difference for each region.')
+        st.write("""
+        From the scatterplot we can see that there is a negative correlation between happiness index and perceptions of corruption,
+        the lower the corruption score, the higher the happiness index is likely to be.
+        There no clear difference for each region with all countries in each region scattered throughout the plot.""")
+
         fig = px.scatter(df.dropna(), x="Perceptions of corruption", y="Happiness Score", animation_frame="year", size='GDP per capita',
                 color="region", hover_name="Country name",
                 category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
@@ -385,9 +419,9 @@ def app():
 
 
     st.write("""
-        We observe that countries having a higher GDI have a higher happiness score. This seems to align with what \
-            one would expect; a country having low gender disparity is more inclusive and diverse, and likely to have \
-                a higher happiness score.
+        We observe that countries having a higher GDI have a higher happiness score. This seems to align with what
+        one would expect; a country having low gender disparity is more inclusive and diverse, and likely to have
+        a higher happiness score.
     """)
 
 
@@ -420,6 +454,14 @@ def app():
     
     st.plotly_chart(plot_mental_health(df_pivot19, df_mh_adm))
 
+    st.write("""
+        For countries having close to 0 mental health admissions per 100,000 people, the happiness score seems to be \
+        dependent on other factors and a direct correlation cannot be observed. However, in countries having more than 100 mental \
+        health admissions per 100,000, the happiness score is less than 5, indicating that perhaps countries that have destigmatized \
+        mental health are more likely to have a higher happiness score. The graph could also indicate that there is poor \
+        reporting of mental health admissions in various countries.
+    """)
+
     def plot_mental_health_facilities(happiness_df, mental_health_facilities):
         x = mental_health_facilities[mental_health_facilities['IndicatorCode'].str.strip() == 'MH_17'][['Location','FactValueNumeric', 'ParentLocation']]
         x = x.rename(columns={'Location':'Country', 
@@ -436,13 +478,7 @@ def app():
 
     st.plotly_chart(plot_mental_health_facilities(df_pivot19, df_mh_fac))
 
-    st.write("""
-        For countries having close to 0 mental health admissions per 100,000 people, the happiness score seems to be \
-        dependent on other factors and a direct correlation cannot be observed. However, in countries having >100 mental \
-        health admissions per 100,000, the happiness score is >5, indicating that perhaps countries that have destigmatized \
-        mental health are more likely to have a higher happiness score. The graph could also indicate that there is poor \
-        reporting of mental health admissions in various countries.
-    """)
+    
 
     st.text("")
     st.markdown('##### Suicide Rates')
@@ -474,7 +510,7 @@ def app():
         
         fig.update_layout(
             yaxis2={"overlaying":"y", "side":"right", "title": "Suicide Rate Per 100000"},
-            height=550,
+            height=500,
             margin=dict(l=20, r=20, t=20, b=20),
             legend_title="",
             legend=dict(
@@ -483,22 +519,19 @@ def app():
                 y=1.1,
                 xanchor="right",
                 x=1
-            )
+            ),
+            xaxis={'visible': False, 'showticklabels': False}
         )
         
         fig.update_yaxes(title_text="Happiness Score", secondary_y=False)
         
-        fig['layout']['updatemenus'][0]['pad']=dict(r= 10, t= 150)
-        fig['layout']['sliders'][0]['pad']=dict(r= 10, t= 150,)
+        fig['layout']['updatemenus'][0]['pad'] = dict(r=10, t=20)
+        fig['layout']['sliders'][0]['pad'] = dict(r=10, t=20,)
         
         return fig
 
 
     st.plotly_chart(plot_suicide(df, df_suicide))
-
-    st.write("TODO: Add writeup")
-
-
 
     st.text("")
     st.markdown('##### Sunshine Hours')
