@@ -433,8 +433,8 @@ def app():
         We are also interested in exploring whether a country's mental health services availability has any \
         impact on the happiness score. For this, we explore a dataset published by the World Health Organization, \
         that contains information on mental hospitals, mental health admissions, etc. for countries spanning across \
-        multiple years. For the purpose of this analysis, we consider the following two factors: 1. Mental Health \
-        Admissions per 100,000 people and 2. Mental Health Facilities per 100,000 people. We consider data for the year 2019.
+        multiple years. For the purpose of this analysis, we consider the following two factors: (1) Mental Health \
+        Admissions per 100,000 people and (2) Mental Health Facilities per 100,000 people. We consider data for the year 2019.
     """)
 
     def plot_mental_health(happiness_df, mental_health):
@@ -483,8 +483,16 @@ def app():
     st.text("")
     st.markdown('##### Suicide Rates')
 
-    st.write("In this section, we examine the correlation between suicide rate and happiness. \
-        We used the suicide rate data per 100,000 people. [Add more .....]")
+    st.write("""In this section, we examine the correlation between suicide rate and happiness.
+        We hypothesized that a less happy country would have a higher suicide rate.
+        We used the suicide rate data per 100,000 people obtained from World Health Organization. 
+        """)
+    
+    st.write("""We plotted happiness score as a line sorted from highest lo lowest throughout the year.
+        Another line representing the suicide rate was added to see the correlation.
+        As we can see, the suicide rate fluctuates a lot irrespective of happiness score.
+        Contrary to intuition, there seem to be no significant correlation between happiness index and suicide rate.
+        """)
 
     def plot_suicide(df, suicide):
         suicide = suicide[suicide['Dim1'] == 'Both sexes']
@@ -532,6 +540,8 @@ def app():
 
 
     st.plotly_chart(plot_suicide(df, df_suicide))
+
+
 
     st.text("")
     st.markdown('##### Sunshine Hours')
