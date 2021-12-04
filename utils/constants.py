@@ -16,7 +16,7 @@ NEGATIVE_AFFECT = "Negative affect"
 GDI = "GDI"
 HDI = "HDI"
 
-REGION_LIST = ["Africa", "Europe", "Asia", "Oceania", "Americas"]
+REGION_LIST = ["Africa", "Americas", "Asia", "Europe", "Oceania"]
 
 column_descriptions = {
     HAPPINESS_SCORE: "The average happiness index as measured by the Cantril Ladder poll", 

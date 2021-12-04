@@ -59,6 +59,7 @@ def load_data():
 
     # Pivoted
     df_pivot = df.pivot_table(index=COUNTRY, columns=YEAR, values=HAPPINESS_SCORE).reset_index()
+    df_pivot = df_pivot.join(df_country.set_index(COUNTRY), on=COUNTRY)
 
     # Gender
     df_gender = pd.read_excel('data/Gender Development Index (GDI).xlsx')

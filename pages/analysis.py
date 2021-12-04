@@ -5,10 +5,10 @@ import plotly.express as px
 from utils.dataloader import load_data
 from utils.constants import *
 
-def world_map(df, scope='world'):
-    df_happy_sort_year = df.sort_values(by=[YEAR])
+def world_map(df):
+    df_sort_year = df.sort_values(by=[YEAR])
     fig = px.choropleth(
-        data_frame=df_happy_sort_year, 
+        data_frame=df_sort_year, 
         locations=COUNTRY, 
         locationmode="country names",
         # hover_name=HAPPINESS_SCORE, 
@@ -29,26 +29,29 @@ def world_map(df, scope='world'):
             showframe=False,
             showcoastlines=False,
             projection_type='equirectangular', 
-            scope=scope
+            fitbounds="locations"
         ),
     )
     return fig
 
+@st.cache()
+def filter_df_by_continent(df, df_pivot, region): 
+    return df[df[REGION] == region], df_pivot[df_pivot[REGION] == region]
+
 def app():
-    df, df_happy, df_country, df_pivot, df_hdi, df_gender, df_mh_adm, df_mh_fac, df_suicide, df_sunshine = load_data()
+    df, _, df_country, df_pivot, df_hdi, df_gender, df_mh_adm, df_mh_fac, df_suicide, df_sunshine = load_data()
+
+    continent = st.sidebar.radio('Continent', ["Whole World"] + REGION_LIST)
+    if continent != "Whole World":
+        df, df_pivot = filter_df_by_continent(df, df_pivot, continent)
 
     st.markdown('# Analysis')
+    if continent == "Whole World":
+        st.markdown("""### Worldwide Happiness""")
+    else: 
+        st.markdown(f"""### Happiness in {continent}""")
 
-    st.markdown("""    
-        ### Worldwide Happiness
-        The map below shows the happiness index for each country throughout the year 2010 until 2019. 
-        From the map we can see that countries in Europe, America, and Australia generally have higher happiness index 
-        than countries in Asia and Africa.""")
-
-    st.plotly_chart(world_map(df))
-    st.markdown('### Happiness Index by Country')   
-
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([3, 5])
 
     most19_country = df_pivot.set_index(COUNTRY).select_dtypes(np.number).idxmax()[2019]
     most19_score = df_pivot[df_pivot[COUNTRY] == most19_country][2019].values[0]
@@ -80,6 +83,19 @@ def app():
         <div style='font-size: 36px; color:firebrick; font-weight:bold;'>%s</div>\
         <div style='font-size: 20px;'>Average Index: %0.2f</div>" % (least_avg_country, least_avg_score)
     col2.markdown(least_avg_text, unsafe_allow_html=True)
+
+
+    st.markdown(f"""
+        The map below shows the happiness index for each country throughout the year 2010 until 2019. 
+        From the map we can see that countries in Europe, America, and Australia generally have higher happiness index 
+        than countries in Asia and Africa.""")
+
+    st.plotly_chart(world_map(df))
+    st.markdown("""
+        ---
+        ### Happiness Index by Country
+    """)   
+
 
     st.write("""
         Below are the happiness index trend for each country in its respective region. 
@@ -189,7 +205,7 @@ def app():
         we find that GDP, Life Expectancy, and Social Support are **on average most heavily correlated with the Happiness Score \
         happiness index.**')
 
-    fig = px.imshow(df_happy.corr(), color_continuous_scale="RdBu")
+    fig = px.imshow(df.corr(), color_continuous_scale="RdBu")
     st.plotly_chart(fig)
 
     st.markdown("""
@@ -210,50 +226,45 @@ def app():
         healthcare, high life expectancies, and growing, powerful economies.
     """)
 
-    hdi_option = st.selectbox('Select HDI category',\
-    ['Developed Countries', 'Developing Countries'])
+    # hdi_option = st.radio('Select HDI category', ['Developed Countries', 'Developing Countries'])
     
-    if hdi_option == 'Developed Countries':
     # with st.expander("Developed Countries"):
-        st.markdown("""
-            **Developed Countries**
+    st.markdown("""
+        **Developed Countries**
 
-            For developed countries with high Human Development Indices, happiness is positively correlated to many factors like 
-            social support, freedom to make life choices, generosity, etc. Further, perceptions of corruption is highly negatively 
-            correlated with happiness index, showing that people care about politics, who the country's leaders are, and are aware 
-            enough to know what might be affecting their access to peace and standard of living on a daily basis.
+        For developed countries with high Human Development Indices, happiness is positively correlated to many factors like 
+        social support, freedom to make life choices, generosity, etc. Further, perceptions of corruption is highly negatively 
+        correlated with happiness index, showing that people care about politics, who the country's leaders are, and are aware 
+        enough to know what might be affecting their access to peace and standard of living on a daily basis.
 
-            This shows that when basic needs like economy (as measured by GDP) and health (as measured by life expectancy) are in good shape, 
-            people start caring about a well-rounded life and factors like generosity, social support systems, political influences, and 
-            other nuanced factors to happiness.
-        """)
+        This shows that when basic needs like economy (as measured by GDP) and health (as measured by life expectancy) are in good shape, 
+        people start caring about a well-rounded life and factors like generosity, social support systems, political influences, and 
+        other nuanced factors to happiness.
+    """)
 
-        developed_countries = list(df_hdi[df_hdi["hdi2019"] >= 0.8][COUNTRY])
-        region_df = df_happy[df_happy[COUNTRY].isin(developed_countries)]
-        fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
-        st.plotly_chart(fig)
+    developed_countries = list(df_hdi[df_hdi["hdi2019"] >= 0.8][COUNTRY])
+    region_df = df[df[COUNTRY].isin(developed_countries)]
+    fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
+    st.plotly_chart(fig)
 
-    else:
     # with st.expander("Developing Countries"):
-        st.markdown("""
-            **Developing Countries**
+    st.markdown("""
+        **Developing Countries**
 
-            Through the below heatmap, we see that as we move towards developing countries with lower Human Development Indices, 
-            happiness is positively only correlated to per capita GDP and Life Expectancy at birth, i.e., the economy and health 
-            systems play the most significant roles as people's happiness depends on their ability to get by and make a living 
-            and work towards a respectable standard of living.
+        Through the below heatmap, we see that as we move towards developing countries with lower Human Development Indices, 
+        happiness is positively only correlated to per capita GDP and Life Expectancy at birth, i.e., the economy and health 
+        systems play the most significant roles as people's happiness depends on their ability to get by and make a living 
+        and work towards a respectable standard of living.
 
-            Things like generosity, or freedom to make life choices are effectively first world problems that don't really factor 
-            into general happiness for most people.
-        """)
+        Things like generosity, or freedom to make life choices are effectively first world problems that don't really factor 
+        into general happiness for most people.
+    """)
 
-        developing_countries = list(df_hdi[df_hdi["hdi2019"] < 0.7][COUNTRY])
-        region_df = df_happy[df_happy[COUNTRY].isin(developing_countries)]
-        fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
-        st.plotly_chart(fig)
+    developing_countries = list(df_hdi[df_hdi["hdi2019"] < 0.7][COUNTRY])
+    region_df = df[df[COUNTRY].isin(developing_countries)]
+    fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
+    st.plotly_chart(fig)
 
-
-    st.text("")
     st.markdown('### Quality of Life Factors')
     st.write('In this section, we explore the correlation between happiness index and several quality of life factors presented in the original report.\
     The first graph below describes yearly change of the selected feature in each continent given in our main happiness dataset, and\
@@ -475,7 +486,7 @@ def app():
                 xanchor="right",
                 x=1
             ),
-            xaxis={'visible': False, 'showticklabels': False}
+            xaxis={'visible': True, 'showticklabels': False}
         )
         
         fig.update_yaxes(title_text=HAPPINESS_SCORE, secondary_y=False)
@@ -512,14 +523,16 @@ def app():
         # Add annotations for a high happiness low sunshine country, and a low happiness, high sunshine country 
         # to corroborate the inconclusivity of the correlation in the writeup
         country = "Finland"
-        low_sunshine = happiness_sunshine_merged[happiness_sunshine_merged[COUNTRY] == country]["YearlySunshineHours"].values[0]
-        high_happiness = happiness_sunshine_merged[happiness_sunshine_merged[COUNTRY] == country][HAPPINESS_SCORE].values[0]
-        fig.add_annotation(x=low_sunshine, y=high_happiness, text=country, showarrow=True, arrowhead=1)
+        if country in list(happiness_sunshine_merged[COUNTRY]):
+            low_sunshine = happiness_sunshine_merged[happiness_sunshine_merged[COUNTRY] == country]["YearlySunshineHours"].values[0]
+            high_happiness = happiness_sunshine_merged[happiness_sunshine_merged[COUNTRY] == country][HAPPINESS_SCORE].values[0]
+            fig.add_annotation(x=low_sunshine, y=high_happiness, text=country, showarrow=True, arrowhead=1)
 
         country = "Egypt"
-        high_sunshine = happiness_sunshine_merged[happiness_sunshine_merged[COUNTRY] == country]["YearlySunshineHours"].values[0]
-        low_happiness = happiness_sunshine_merged[happiness_sunshine_merged[COUNTRY] == country][HAPPINESS_SCORE].values[0]
-        fig.add_annotation(x=high_sunshine, y=low_happiness, text=country, showarrow=True, arrowhead=1)
+        if country in list(happiness_sunshine_merged[COUNTRY]):
+            high_sunshine = happiness_sunshine_merged[happiness_sunshine_merged[COUNTRY] == country]["YearlySunshineHours"].values[0]
+            low_happiness = happiness_sunshine_merged[happiness_sunshine_merged[COUNTRY] == country][HAPPINESS_SCORE].values[0]
+            fig.add_annotation(x=high_sunshine, y=low_happiness, text=country, showarrow=True, arrowhead=1)
 
         return fig
 
