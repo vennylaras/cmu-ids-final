@@ -97,10 +97,10 @@ def app():
     """)   
 
 
-    st.write("""
+    st.markdown(f"""
         Below are the happiness index trend for each country in its respective region. 
         To get the region (continent) and sub-region for each country, we joined the happiness index dataset with 
-        the United Nations (UN) geoscheme data. There are several countries which have inconsistent names so we manually 
+        the United Nations (UN) geoscheme data {cite("geo")}. There are several countries which have inconsistent names so we manually 
         changed them before joining. Furthermore, there are five countries/territories present in the happiness dataset which 
         are not present in the UN dataset, so we added them manually to their respective regions.
     """)
@@ -210,7 +210,7 @@ def app():
     fig = px.imshow(df.corr(), color_continuous_scale="RdBu")
     st.plotly_chart(fig)
 
-    st.markdown("""
+    st.markdown(f"""
         **However, we hypothesize that these correlations might vary significantly with the standard of living in different 
         countries and the general ability of people to fight for survival versus being able to take a safe and healthy 
         environment as a given.**
@@ -218,7 +218,7 @@ def app():
         To test this hypothesis, we turn to looking at **Human Development Index** as a way to categorize countries.
 
         The Human Development Index (HDI) is compiled by the United Nations Development Programme (UNDP) for 189 countries on 
-        an annual basis. The index considers the health, education and income in a given country to provide a measure of 
+        an annual basis {cite("hdi")}. The index considers the health, education and income in a given country to provide a measure of 
         human development which is comparable between countries and over time. 
     """)
 
@@ -359,14 +359,14 @@ def app():
         We analyzed several additional datasets to see if there is a correlation between these factors with happiness index.
     """)
 
-    st.markdown("""
+    st.markdown(f"""
         ### Gender Disparity
-        Next, we hypothesize that gender disparity might play a role in the happiness score of a country. \
-        Living in an equal society where everyone has the ability to choose the circumstances of their own lives, \
-        would likely lead to greater happiness. To test this hypothesis, we explore a dataset that comprises the \
-        Gender Development Index (GDI) for countries spanning multiple years.
-        GDI is defined as the ratio of female to male HDI values. Countries that have achieved some success in \
-        expanding capabilities for both men and women will have higher GDI. A country having a GDI less than 0.5 \
+        Next, we hypothesize that gender disparity might play a role in the happiness score of a country.
+        Living in an equal society where everyone has the ability to choose the circumstances of their own lives,
+        would likely lead to greater happiness. To test this hypothesis, we explore a dataset that comprises the
+        Gender Development Index (GDI) for countries spanning multiple years {cite("gdi")}.
+        GDI is defined as the ratio of female to male HDI values. Countries that have achieved some success in
+        expanding capabilities for both men and women will have higher GDI. A country having a GDI less than 0.5
         indicates larger gender disparity.
     """)
 
@@ -402,12 +402,13 @@ def app():
     st.markdown('### Mental Health')
     st.markdown('**Availability and Admissions**')
 
-    st.write("""
-        We are also interested in exploring whether a country's mental health services availability has any \
-        impact on the happiness score. For this, we explore a dataset published by the World Health Organization, \
-        that contains information on mental hospitals, mental health admissions, etc. for countries spanning across \
-        multiple years. For the purpose of this analysis, we consider the following two factors: (1) Mental Health \
-        Admissions per 100,000 people and (2) Mental Health Facilities per 100,000 people. We consider data for the year 2019.
+    st.markdown(f"""
+        We are also interested in exploring whether a country's mental health services availability has any
+        impact on the happiness score. For this, we explore a dataset published by the World Health Organization,
+        that contains information on mental hospitals, mental health admissions, etc. for countries spanning across
+        multiple years. For the purpose of this analysis, we consider the following two factors: Mental Health
+        Admissions per 100,000 people {cite("mhadm")} and Mental Health Facilities per 100,000 people {cite("mhfac")}. 
+        We consider data for the year 2019.
     """)
 
     def plot_mental_health(happiness_df, mental_health):
@@ -458,9 +459,9 @@ def app():
         ### Suicide Rates
     """)
 
-    st.write("""In this section, we examine the correlation between suicide rate and happiness.
+    st.markdown(f"""In this section, we examine the correlation between suicide rate and happiness.
         We hypothesized that a less happy country would have a higher suicide rate.
-        We used the suicide rate data per 100,000 people obtained from World Health Organization. 
+        We used the suicide rate data per 100,000 people obtained from World Health Organization {cite("suic")}. 
         """)
     
     st.write("""We plotted happiness score as a line sorted from highest lo lowest throughout the year.
@@ -521,8 +522,8 @@ def app():
         ### Sunshine Hours
     """)
 
-    st.write("In this section, we examine the correlation between sunshine hours and happiness. \
-        We consider data for the yearly sunshine hour average for the year 2019.")
+    st.markdown(f"""In this section, we examine the correlation between sunshine hours and happiness.
+        We consider data for the yearly sunshine hour average for the year 2019 {cite("sun")}.""")
 
     def plot_sunshine(happiness_df, sunshine):
         sunshine = sunshine[[COUNTRY,YEAR]]
@@ -555,10 +556,10 @@ def app():
 
     st.plotly_chart(plot_sunshine(df_pivot19, df_sunshine))
 
-    st.markdown("""
+    st.markdown(f"""
         **Well, not everything has a correlation!**
 
-        Though research suggests that lack of sunshine is a leading cause of depression and anxiety [TODO: Add citations], 
+        Though research suggests that lack of sunshine is a leading cause of depression and anxiety {cite("sad")}, 
         we don't find any marginal correlation between happiness and sunshine, since other factors like GDP and health systems play a more important role.
 
         For example, consider Finland and Egypt (highlighed in the above chart for convenience). Finland is the happiest country in the world even as 
