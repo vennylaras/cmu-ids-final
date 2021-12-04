@@ -15,8 +15,8 @@ def app():
     st.markdown('### Data Source')
 
     st.markdown('##### World Happiness Report')
-    st.write("""
-        The World Happiness Report is a publication of the United Nations Sustainable Development Solutions Network. 
+    st.markdown(f"""
+        The World Happiness Report {cite("base")} is a publication of the United Nations Sustainable Development Solutions Network. 
         This report contains a national happiness index for each country every year, and other key metrics noted below, based on respondent ratings of their own lives.
         Note that the happiness score, is also a result of a poll question in the Gallup World Poll survey, and is NOT computed using the other key metrics collected using the survey.""")
     # st.dataframe(df_unfiltered)
@@ -36,7 +36,16 @@ def app():
 
     st.markdown('##### Secondary Datasets')
     # TODO Explain secondary datasets
-    st.write('TODO')
+    st.markdown(f"""
+        - **Human Development Index** {cite("hdi")}: Human development index (HDI) is a composite index measuring average achievement in three basic dimensions of human development
+            which are long and healthly life, knowledge, and decent standard of living. This data is obtained from the United Nations Development Programme (UNDP) Human Development Report.
+        - **Gender Development Index** {cite("gdi")}: Gender Development Index (GDI) is the ratio of female versus male HDI values, also obtained from UNDP Human Development Report.
+        - **Mental Health Facilities** {cite("mhfac")}: The number of mental health outpatients facilities per 100,000 population per country, obtained from World Health Organization (WHO).
+        - **Mental Health Admissions** {cite("mhadm")}: The number of mental hospital admissions per 100,000 population per country, obtained from WHO.
+        - **Suicide Rate** {cite("suic")}: Suicide rate per 100,000 population per country, obtained from WHO.
+        - **Sunshine Hours** {cite("sun")}: Monthly average sunshine hours per country in the year of 2019, obtained from Wikipedia.
+        - **UN Geoscheme** {cite("geo")}: The United Nations (UN) geoscheme is a system which divides countries and territories into regions and subregions.
+        """)
 
     # TODO Add 4C: Completeness, Coherence, Correctness, aCcountability
     st.markdown('###  Data Quality')
