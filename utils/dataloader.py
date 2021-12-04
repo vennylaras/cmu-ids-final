@@ -2,24 +2,20 @@ import streamlit as st
 import pandas as pd
 import math
 
-@st.cache
+from utils.constants import *
+
+@st.cache()
 def load_mvp_data():
-    df = pd.read_excel('data/HappinessScores.xls')
-    df_happy = df
-    years_to_keep = list(range(2010, 2020, 1))
-    df = df[df["year"].isin(years_to_keep)]
-    return df, df_happy
-    
-# Read File 
-@st.cache(show_spinner=False, suppress_st_warning=True)
-def load_data():
     # Happiness data
     df = pd.read_excel('data/HappinessScores.xls')
-    df_happy = df
-
+    df = df.rename(columns= {'Life Ladder':HAPPINESS_SCORE, 'year': YEAR, 'Country name': COUNTRY})
+    df_unfiltered = df.copy()
     years_to_keep = list(range(2010, 2020, 1))
-    df = df[df["year"].isin(years_to_keep)]
+    df = df[df[YEAR].isin(years_to_keep)]
+    return df, df_unfiltered
 
+@st.cache()  
+def load_country_data(): 
     # Country data
     df_country = pd.read_excel('data/un_geoscheme.xlsx')
     df_country.columns = ['country', 'sub-subregion', 'subregion', 'region', 'unsd_m49_codes']
@@ -45,16 +41,24 @@ def load_data():
     df_country = df_country.append({'country': 'Somaliland region', 'sub-subregion': 'Eastern Africa', 'subregion': 'Sub-Saharan Africa', 'region': 'Africa'}, ignore_index=True)
     df_country = df_country.append({'country': 'Taiwan Province of China', 'sub-subregion': 'Eastern Asia', 'subregion': 'Eastern Asia', 'region': 'Asia'}, ignore_index=True)
 
+    df_country = df_country.rename(columns={"country": COUNTRY})
+    return df_country
+
+@st.cache(show_spinner=False, suppress_st_warning=True)
+def load_data():
+    df, df_unfiltered = load_mvp_data()
+    df_country = load_country_data()
+
     # Country joined with happiness
-    df = df.join(df_country.set_index('country'), on='Country name')
-    df['GDP per capita'] = df['Log GDP per capita'].map(lambda x: math.exp(x))
-    df = df.rename(columns= {'Life Ladder':'Happiness Score'})
+    df = df.join(df_country.set_index(COUNTRY), on=COUNTRY)
+    df[GDP] = df[LOG_GDP].map(lambda x: math.exp(x))
 
     # HDI
     df_hdi = pd.read_csv('data/hdi19.csv')
+    df_hdi = df_hdi.rename(columns={"country": COUNTRY})
 
     # Pivoted
-    df_pivot = df.pivot_table(index="Country name", columns="year", values="Happiness Score").reset_index()
+    df_pivot = df.pivot_table(index=COUNTRY, columns=YEAR, values=HAPPINESS_SCORE).reset_index()
 
     # Gender
     df_gender = pd.read_excel('data/Gender Development Index (GDI).xlsx')
@@ -72,6 +76,6 @@ def load_data():
 
     # Sunshine
     df_sunshine = pd.read_excel('data/Cities_by_Sunshine_Duration_2019_wikipedia.xlsx')
-    df_sunshine = df_sunshine.groupby('Country').mean().reset_index()
+    df_sunshine = df_sunshine.groupby(COUNTRY).mean().reset_index()
 
-    return df, df_happy, df_country, df_pivot, df_hdi, df_gender, df_mh_adm, df_mh_fac, df_suicide, df_sunshine
+    return df, df_unfiltered, df_country, df_pivot, df_hdi, df_gender, df_mh_adm, df_mh_fac, df_suicide, df_sunshine
