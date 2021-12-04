@@ -84,7 +84,7 @@ def app():
         <div style='font-size: 20px;'>Average Index: %0.2f</div>" % (least_avg_country, least_avg_score)
     col2.markdown(least_avg_text, unsafe_allow_html=True)
 
-
+    st.write('\n')
     st.markdown(f"""
         The map below shows the happiness index for each country throughout the year 2010 until 2019. 
         From the map we can see that countries in Europe, America, and Australia generally have higher happiness index 
@@ -131,7 +131,10 @@ def app():
         return fig
 
 
-    option2 = st.selectbox('Select a continent to see the happiness index by countries', REGION_LIST)
+    if continent != "Whole World":
+        option2 = continent
+    else:
+        option2 = st.selectbox('Select a continent to see the happiness index by countries', REGION_LIST)
 
     if option2 == 'Asia':
     # with st.expander("Asia"):
@@ -198,8 +201,7 @@ def app():
         col2.plotly_chart(plot_line_chart("Southern Africa"))
         col2.plotly_chart(plot_line_chart("Western Africa"))
         
-
-    st.text("")
+    st.markdown("---")
     st.markdown('### What Metrics Correlate with Happiness?')
     st.markdown('Looking at the pairwise correlations of all metrics with each other for all countries for the decade 2010-2020, \
         we find that GDP, Life Expectancy, and Social Support are **on average most heavily correlated with the Happiness Score \
@@ -265,12 +267,13 @@ def app():
     fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
     st.plotly_chart(fig)
 
+    st.markdown("---")
     st.markdown('### Quality of Life Factors')
     st.write('In this section, we explore the correlation between happiness index and several quality of life factors presented in the original report.\
     The first graph below describes yearly change of the selected feature in each continent given in our main happiness dataset, and\
     the second graph shows the correlation between each feature and the happiness score for each year.')
 
-    option = st.selectbox('Quality of Life Factors', [SOCIAL_SUPPORT, LIFE_EXPECTANCY, LOG_GDP, FREEDOM, GENEROSITY, CORRUPTION])
+    option = st.selectbox('Quality of Life Factors', [LOG_GDP, SOCIAL_SUPPORT, LIFE_EXPECTANCY, FREEDOM, GENEROSITY, CORRUPTION])
 
     writeups_vs_year_1 = {
         SOCIAL_SUPPORT: """This graph shows the yearly change in social support that was available in each continent in the past years. 
@@ -325,11 +328,11 @@ def app():
     st.plotly_chart(fig)
     st.write(writeups_vs_year_2[option])
     if option == LOG_GDP: 
-        fig = px.scatter(df.dropna(), x=SOCIAL_SUPPORT, y=HAPPINESS_SCORE, animation_frame=YEAR, 
+        fig = px.scatter(df.dropna(), x=LOG_GDP, y=HAPPINESS_SCORE, animation_frame=YEAR, 
                 color=REGION, hover_name=COUNTRY,
                 category_orders={REGION: REGION_LIST})
     else: 
-        fig = px.scatter(df.dropna(), x=SOCIAL_SUPPORT, y=HAPPINESS_SCORE, animation_frame=YEAR, size=GDP,
+        fig = px.scatter(df.dropna(), x=option, y=HAPPINESS_SCORE, animation_frame=YEAR, size=GDP,
                 color=REGION, hover_name=COUNTRY,
                 category_orders={REGION: REGION_LIST})
     st.plotly_chart(fig)

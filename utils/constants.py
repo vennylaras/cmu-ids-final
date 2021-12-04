@@ -60,8 +60,8 @@ citation_links = {
     "hdi":      """http://hdr.undp.org/en/indicators/137506""", # HDI
     "gdi":      """http://hdr.undp.org/en/indicators/137906""", # gender development index
     "suic":     """https://www.who.int/data/gho/data/themes/mental-health/suicide-rates""", # suicide
-    "mhadm":    """https://www.who.int/data/gho/data/indicators/indicator-details/GHO/mental-health-outpatient-facilities-(per-100-000)""", # mental health facilities
-    "mhfac":    """https://www.who.int/data/gho/data/indicators/indicator-details/GHO/mental-hospital-admissions-(per-100-000)""", # mental health admissions
+    "mhfac":    """https://www.who.int/data/gho/data/indicators/indicator-details/GHO/mental-health-outpatient-facilities-(per-100-000)""", # mental health facilities
+    "mhadm":    """https://www.who.int/data/gho/data/indicators/indicator-details/GHO/mental-hospital-admissions-(per-100-000)""", # mental health admissions
     "sun":      """https://data.world/makeovermonday/2019w44""", # sunshine
     "sad":      """https://www.webmd.com/mental-health/news/20021205/unraveling-suns-role-in-depression""",
     "geo":      """https://en.wikipedia.org/wiki/List_of_countries_by_United_Nations_geoscheme""", # countries and regions
