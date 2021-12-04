@@ -246,8 +246,15 @@ def app():
 
     developed_countries = list(df_hdi[df_hdi["hdi2019"] >= 0.8][COUNTRY])
     region_df = df[df[COUNTRY].isin(developed_countries)]
-    fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
-    st.plotly_chart(fig)
+
+    with st.expander("List of Developed Countries"):
+        st.write(", ".join(region_df[COUNTRY].unique().tolist()))
+
+    if not region_df.empty:
+        fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
+        st.plotly_chart(fig)
+    else:
+        st.markdown(f"""Available data in the region {continent} does not have any developed country.""")
 
     # with st.expander("Developing Countries"):
     st.markdown("""
@@ -264,8 +271,15 @@ def app():
 
     developing_countries = list(df_hdi[df_hdi["hdi2019"] < 0.7][COUNTRY])
     region_df = df[df[COUNTRY].isin(developing_countries)]
-    fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
-    st.plotly_chart(fig)
+
+    with st.expander("List of Developing Countries"):
+        st.write(", ".join(region_df[COUNTRY].unique().tolist()))
+
+    if not region_df.empty:
+        fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
+        st.plotly_chart(fig)
+    else:
+        st.markdown(f"""Available data in the region {continent} does not have any developing country.""")
 
     st.markdown("---")
     st.markdown('### Quality of Life Factors')
@@ -478,7 +492,7 @@ def app():
                 if t.name=="SuicideRatePer100000": t.update(yaxis="y2")
         
         fig.update_layout(
-            yaxis2={"overlaying":"y", "side":"right", "title": "Suicide Rates Per 100,000"},
+            yaxis2={"overlaying":"y", "side":"right", "title": "Suicide Rates Per 100,000", "range":(0,50)},
             height=500,
             margin=dict(l=20, r=20, t=20, b=20),
             legend_title="",
@@ -492,7 +506,7 @@ def app():
             xaxis={'visible': True, 'showticklabels': False}
         )
         
-        fig.update_yaxes(title_text=HAPPINESS_SCORE, secondary_y=False)
+        fig.update_yaxes(title_text=HAPPINESS_SCORE, secondary_y=False, range=(3,8))
         
         fig['layout']['updatemenus'][0]['pad'] = dict(r=10, t=20)
         fig['layout']['sliders'][0]['pad'] = dict(r=10, t=20,)
