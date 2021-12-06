@@ -33,7 +33,10 @@ def app():
     reg = LinearRegression().fit(X, y)
     
     
-    st.markdown("# Let's Predict")
+    st.markdown("# Let's Predict Your Country")
+    st.markdown("We created a linear regression model using 6 features. This model predicts the happiness score based on your provided inputs.\
+    Feel free to move the sliders below to provide inputs to our model and predict the happiness score of your country!\
+    Also, our model additionally guesses your country by finding the one which has the most similar happiness score by applying euclidean distance")
     
     gdp  = st.number_input('GDP per Capita')
 
