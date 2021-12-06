@@ -56,6 +56,9 @@ def load_data():
     # HDI
     df_hdi = pd.read_csv('data/hdi19.csv')
     df_hdi = df_hdi.rename(columns={"country": COUNTRY})
+    df_hdi[COUNTRY][df_hdi[COUNTRY] == 'Palestine'] = 'Palestinian Territories'
+    df_hdi[COUNTRY][df_hdi[COUNTRY] == 'Republic of the Congo'] = 'Congo (Brazzaville)'
+    df_hdi[COUNTRY][df_hdi[COUNTRY] == 'DR Congo'] = 'Congo (Kinshasa)'
 
     # Pivoted
     df_pivot = df.pivot_table(index=COUNTRY, columns=YEAR, values=HAPPINESS_SCORE).reset_index()
@@ -63,6 +66,22 @@ def load_data():
 
     # Gender
     df_gender = pd.read_excel('data/Gender Development Index (GDI).xlsx')
+    df_gender[COUNTRY] = df_gender[COUNTRY].str.strip()
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Bolivia (Plurinational State of)'] = 'Bolivia'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Congo'] = 'Congo (Brazzaville)'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Congo (Democratic Republic of the)'] = 'Congo (Kinshasa)'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Czechia'] = 'Czech Republic'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Hong Kong, China (SAR)'] = 'Hong Kong S.A.R. of China'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Iran (Islamic Republic of)'] = 'Iran'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Lao People\'s Democratic Republic'] = 'Laos'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Moldova (Republic of)'] = 'Moldova'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Palestine, State of'] = 'Palestinian Territories'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Russian Federation'] = 'Russia'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Korea (Republic of)'] = 'South Korea'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Tanzania (United Republic of)'] = 'Tanzania'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Venezuela (Bolivarian Republic of)'] = 'Venezuela'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Viet Nam'] = 'Vietnam'
+    df_gender[COUNTRY][df_gender[COUNTRY] == 'Syrian Arab Republic'] = 'Syria'
 
     # Mental Health
     df_mh_adm = pd.read_excel('data/MentalHealthAdmissionsPer100000.xlsx')
