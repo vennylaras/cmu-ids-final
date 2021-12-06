@@ -73,5 +73,5 @@ def app():
                   value = val
                   min_val = dist
 
-      st.write('Then, you might be from ',country, '!')
+      st.write('You might be from ',country, '!')
       st.write('Your happiness score is ',predicted_val_round, ', and', country,"'s happiness score is", round(value,5 ), '!')
