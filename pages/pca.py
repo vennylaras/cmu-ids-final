@@ -9,7 +9,7 @@ from utils.constants import *
 def app():
 
     # Read File 
-    raw, df_unfiltered = load_mvp_data()
+    raw,_ = load_mvp_data()
     df_raw = raw[['Country','Log GDP per capita','Social support','Healthy life expectancy at birth','Freedom to make life choices', 'Generosity',
            'Perceptions of corruption','Happiness Score']]
     df_raw = df_raw.dropna()
