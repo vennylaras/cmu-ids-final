@@ -146,80 +146,98 @@ def app():
         return fig
 
 
-    if continent != "Whole World":
-        option2 = continent
-    else:
+    if continent == "Whole World":
         st.write("""
             Overall, we observed that countries in Europe, Americas, and Oceania have a relatively higher happiness score
             compared to countries in Asia and Africa. The happiness index for those 3 regions throughout the years are also more
             stable than Asia and Africa.
         """)
-        option2 = st.selectbox('Select a continent to see the happiness index by countries', REGION_LIST)
+        # option2 = st.selectbox('Select a continent to see the happiness index by countries', REGION_LIST)
+    # else:
+    #     option2 = continent
+    
+    df_subregion = df.groupby(by=[YEAR, REGION, 'sub-subregion']).mean().reset_index()
 
-    if option2 == 'Asia':
-    # with st.expander("Asia"):
-        st.write('Countries in Asia generally do not have significantly high or significantly low happiness index.\
-        In its subregion, countries in South Asia have a lower happiness index compared to other subregions in Asia.')
+    def plot_bar_chart(df) :
+        fig = px.bar(df_subregion, x="sub-subregion", y=HAPPINESS_SCORE, color=REGION, 
+            animation_frame=YEAR, range_y=(2,8), category_orders={REGION: REGION_LIST})
 
-        col1, col2 = st.columns(2)
-        col1.plotly_chart(plot_line_chart("Central Asia"))
-        col1.plotly_chart(plot_line_chart("Eastern Asia"))
-        col1.plotly_chart(plot_line_chart("South-eastern Asia"))
-        col2.plotly_chart(plot_line_chart("Southern Asia"))
-        col2.plotly_chart(plot_line_chart("Western Asia"))
+        fig.update_layout(
+            xaxis_title=None
+        )
+
+        fig['layout']['updatemenus'][0]['pad'] = dict(r=10, t=110)
+        fig['layout']['sliders'][0]['pad'] = dict(r=10, t=110)
+
+        return fig
+
+
+    st.plotly_chart(plot_bar_chart(df))
+
+    # if option2 == 'Asia':
+    # # with st.expander("Asia"):
+    #     st.write('Countries in Asia generally do not have significantly high or significantly low happiness index.\
+    #     In its subregion, countries in South Asia have a lower happiness index compared to other subregions in Asia.')
+
+    #     col1, col2 = st.columns(2)
+    #     col1.plotly_chart(plot_line_chart("Central Asia"))
+    #     col1.plotly_chart(plot_line_chart("Eastern Asia"))
+    #     col1.plotly_chart(plot_line_chart("South-eastern Asia"))
+    #     col2.plotly_chart(plot_line_chart("Southern Asia"))
+    #     col2.plotly_chart(plot_line_chart("Western Asia"))
 
     
-    if option2 == 'Oceania':
-    # with st.expander("Oceania"):
-        st.write('For Oceania, we only have data from two countries and both of them are in the Australia & New Zealand subregion \
-        and both countries have high happiness index.')
+    # if option2 == 'Oceania':
+    # # with st.expander("Oceania"):
+    #     st.write('For Oceania, we only have data from two countries and both of them are in the Australia & New Zealand subregion \
+    #     and both countries have high happiness index.')
 
-        st.plotly_chart(plot_line_chart("Australia and New Zealand"))
+    #     st.plotly_chart(plot_line_chart("Australia and New Zealand"))
         
 
-    elif option2 == 'Europe':
-    # with st.expander("Europe"):
-        st.write('Countries in Europe have an overall high happiness index score.\
-        Countries in the subregion West Europe have highest average happiness index compared to other regions with all countries having \
-        happiness index score greater than 6 throughout the years. \
-        Countries in Northern Europe also have stable happiness index ranging from 5 to 8. \
-        A country from this subregion, Finland has the highest happiness index out of all countries in the world for the year 2016-2019.')
+    # elif option2 == 'Europe':
+    # # with st.expander("Europe"):
+    #     st.write('Countries in Europe have an overall high happiness index score.\
+    #     Countries in the subregion West Europe have highest average happiness index compared to other regions with all countries having \
+    #     happiness index score greater than 6 throughout the years. \
+    #     Countries in Northern Europe also have stable happiness index ranging from 5 to 8. \
+    #     A country from this subregion, Finland has the highest happiness index out of all countries in the world for the year 2016-2019.')
 
-        col1, col2 = st.columns(2)
-        col1.plotly_chart(plot_line_chart("Eastern Europe"))
+    #     col1, col2 = st.columns(2)
+    #     col1.plotly_chart(plot_line_chart("Eastern Europe"))
 
-        fig = plot_line_chart("Northern Europe")
-        # score = df[(df[COUNTRY] == 'Finland') & (df[YEAR] == 2018)].values[0]
-        # fig.add_annotation(x=2018, y=score, text='Finland', showarrow=True)
-        col1.plotly_chart(fig)
+    #     fig = plot_line_chart("Northern Europe")
+    #     # score = df[(df[COUNTRY] == 'Finland') & (df[YEAR] == 2018)].values[0]
+    #     # fig.add_annotation(x=2018, y=score, text='Finland', showarrow=True)
+    #     col1.plotly_chart(fig)
 
-        col2.plotly_chart(plot_line_chart("Southern Europe"))
-        col2.plotly_chart(plot_line_chart("Western Europe"))
+    #     col2.plotly_chart(plot_line_chart("Southern Europe"))
+    #     col2.plotly_chart(plot_line_chart("Western Europe"))
 
-    elif option2 == 'Americas':
-    # with st.expander("America"):
-        st.write('The subregion North America have a significantly high happiness index while Central and South America have a moderately high happiness index.\
-        On the other hand, countries in the Carribean subregion have a moderately low happiness index.')
+    # elif option2 == 'Americas':
+    # # with st.expander("America"):
+    #     st.write('The subregion North America have a significantly high happiness index while Central and South America have a moderately high happiness index.\
+    #     On the other hand, countries in the Carribean subregion have a moderately low happiness index.')
 
-        col1, col2 = st.columns(2)
-        col1.plotly_chart(plot_line_chart("Northern America"))
-        col1.plotly_chart(plot_line_chart("Central America"))
-        col2.plotly_chart(plot_line_chart("South America"))
-        col2.plotly_chart(plot_line_chart("Caribbean"))
+    #     col1, col2 = st.columns(2)
+    #     col1.plotly_chart(plot_line_chart("Northern America"))
+    #     col1.plotly_chart(plot_line_chart("Central America"))
+    #     col2.plotly_chart(plot_line_chart("South America"))
+    #     col2.plotly_chart(plot_line_chart("Caribbean"))
         
 
-    elif option2 == 'Africa':
-    # with st.expander("Africa"):
-        st.write('Generally, we can see that countries in Africa have averagely lower happiness index compared to other continents, \
-        with almost all countries throughout the years having happiness score less than 6.\
-        The index also seems to fluctuate a lot through out the years.')
+    # elif option2 == 'Africa':
+    # # with st.expander("Africa"):
+    #     st.write('Generally, we can see that countries in Africa have averagely lower happiness index compared to other continents, \
+    #     with almost all countries throughout the years having happiness score less than 6.\
+    #     The index also seems to fluctuate a lot through out the years.')
 
-        col1, col2 = st.columns(2)
-        col1.plotly_chart(plot_line_chart("Northern Africa"))
-        col1.plotly_chart(plot_line_chart("Eastern Africa"))
-        col1.plotly_chart(plot_line_chart("Middle Africa"))
-        col2.plotly_chart(plot_line_chart("Southern Africa"))
-        col2.plotly_chart(plot_line_chart("Western Africa"))
+    #     col1, col2 = st.columns(2)
+    #     col1.plotly_chart(plot_line_chart("Northern Africa"))
+    #     col1.plotly_chart(plot_line_chart("Eastern Africa"))
+    #     col1.plotly_chart(plot_line_chart("Middle Africa"))
+    #     col2.plotly_chart(plot_line_chart("Southern Africa"))
+    #     col2.plotly_chart(plot_line_chart("Western Africa"))
         
     st.markdown("---")
     st.markdown('### What Metrics Correlate with Happiness?')
