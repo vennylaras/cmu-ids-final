@@ -10,11 +10,11 @@ def app():
 
 
     # Read File 
-    raw = pd.read_excel('HappinessScores.xls')
+    raw = pd.read_excel('data/HappinessScores.xls')
     df_raw = raw[['Country name','Log GDP per capita','Social support','Healthy life expectancy at birth','Freedom to make life choices', 'Generosity',
            'Perceptions of corruption']].rename(columns={'Country name':'country'})
     df_raw = df_raw.dropna()
-    df_country = pd.read_excel('un_geoscheme.xlsx')
+    df_country = pd.read_excel('data/un_geoscheme.xlsx')
     df_country.columns = ['country', 'sub-subregion', 'subregion', 'region', 'unsd_m49_codes']
     df_country = df_country[['country', 'region']]
     df_country['country'] = df_country['country'].str.strip()
