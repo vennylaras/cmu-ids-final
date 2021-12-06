@@ -52,7 +52,8 @@ cite_num = {
     "sun":      "[7]", 
     "sad":      "[8]", 
     "geo":      "[9]", 
-    "cantril":  "[10]"
+    "cantril":  "[10]",
+    "hdiimf":   "[11]",
 }
 
 citation_links = {
@@ -65,7 +66,8 @@ citation_links = {
     "sun":      """https://data.world/makeovermonday/2019w44""", # sunshine
     "sad":      """https://www.webmd.com/mental-health/news/20021205/unraveling-suns-role-in-depression""",
     "geo":      """https://en.wikipedia.org/wiki/List_of_countries_by_United_Nations_geoscheme""", # countries and regions
-    "cantril":  """https://news.gallup.com/poll/122453/understanding-gallup-uses-cantril-scale.aspx"""
+    "cantril":  """https://news.gallup.com/poll/122453/understanding-gallup-uses-cantril-scale.aspx""",
+    'hdiimf':   """https://worldpopulationreview.com/country-rankings/hdi-by-country""" # HDI threshold
     # TODO add more that we've used
 }
 

@@ -92,7 +92,7 @@ def app():
             than countries in Asia and Africa.""",
         "Africa" : """The map below shows the happiness index for each country throughout the year 2010 until 2019. 
             From the map we can see that countries in Africa generally have low happiness index. In Eastern Africa,
-            Zimbabwe's happiness index score gradually decreased until it because the least happiest country in Africa
+            Zimbabwe's happiness index score gradually decreased until it became the least happiest country in Africa
             in the year 2019.""",
         "Americas" : """The map below shows the happiness index for each country throughout the year 2010 until 2019. 
             From the map we can see that countries in Americas generally have high happiness index, with Canada
@@ -114,12 +114,12 @@ def app():
     st.plotly_chart(world_map(df))
     st.markdown("""
         ---
-        ### Happiness Index by Country
+        ### Happiness Index by Region
     """)   
 
 
     st.markdown(f"""
-        Below are the happiness index trend for each country in its respective region. 
+        Below are the happiness index trend for each region. 
         To get the region (continent) and sub-region for each country, we joined the happiness index dataset with 
         the United Nations (UN) geoscheme data {cite("geo")}. There are several countries which have inconsistent names so we manually 
         changed them before joining. Furthermore, there are five countries/territories present in the happiness dataset which 
@@ -241,11 +241,21 @@ def app():
         
     st.markdown("---")
     st.markdown('### What Metrics Correlate with Happiness?')
-    st.markdown('Looking at the pairwise correlations of all metrics with each other for all countries for the decade 2010-2020, \
-        we find that GDP, Life Expectancy, and Social Support are **on average most heavily correlated with the Happiness Score \
-        happiness index.**')
 
-    fig = px.imshow(df.corr(), color_continuous_scale="RdBu")
+    writeups_corr_most = {
+        'Whole World': 'GDP, Life Expectancy, and Social Support',
+        'Africa': 'GDP, Life Expectancy, and Social Support',
+        'Americas' : 'GDP, Life Expectancy, and Social Support',
+        'Asia' : 'GDP, Life Expectancy, and Social Support',
+        'Europe' : 'GDP and Freedom to make life choices',
+        'Oceania' : 'Freedom to make life choices, Generosity, and Social Support'
+    }
+
+    st.markdown(f"""Looking at the pairwise correlations of all metrics with each other for all countries for the decade 2010-2019, \
+        we find that {writeups_corr_most[continent]} are **on average most heavily correlated with the Happiness Score \
+        happiness index.**""")
+
+    fig = px.imshow(df.corr().iloc[1:-1,1:-1], color_continuous_scale="RdBu")
     st.plotly_chart(fig)
 
     st.markdown(f"""
@@ -260,7 +270,9 @@ def app():
         human development which is comparable between countries and over time. 
     """)
 
-    st.markdown("""
+    st.markdown(f"""
+        HDI is divided into four tiers {cite("hdiimf")}: very high human development (above or equal to 0.8), high human development
+        (0.7 to 0.79), medium human development (0.55 to 0.7), and low human development (below 0.55).
         The International Monetary Fund (IMF) categorizes "developed countries" have an HDI score of 0.8 or above 
         (in the very high human development tier). These countries have stable governments, widespread education, 
         healthcare, high life expectancies, and growing, powerful economies.
@@ -268,13 +280,15 @@ def app():
 
     # hdi_option = st.radio('Select HDI category', ['Developed Countries', 'Developing Countries'])
     
+    threshold = st.slider('HDI Score Threshold', 0.5, 0.8, 0.8)
+
     st.markdown("""**Developed Countries**""")
 
-    developed_countries = list(df_hdi[df_hdi["hdi2019"] >= 0.8][COUNTRY])
+    developed_countries = list(df_hdi[df_hdi["hdi2019"] >= threshold][COUNTRY])
     region_df = df[df[COUNTRY].isin(developed_countries)]
 
-    if not region_df.empty:
-        st.markdown("""
+    writeups_developed = {
+        "Whole World" : """
             For developed countries with high Human Development Indices, happiness is positively correlated to many factors like 
             social support, freedom to make life choices, generosity, etc. Further, perceptions of corruption is highly negatively 
             correlated with happiness index, showing that people care about politics, who the country's leaders are, and are aware 
@@ -283,23 +297,53 @@ def app():
             This shows that when basic needs like economy (as measured by GDP) and health (as measured by life expectancy) are in good shape, 
             people start caring about a well-rounded life and factors like generosity, social support systems, political influences, and 
             other nuanced factors to happiness.
-        """)
+        """,
+        "Africa" : """
+            In Africa, only one country fell into the category of Developed country when the threshold is equal to 0.8, Mauritius. 
+            In this country, happiness is positively correlated to many factors such as GDP, social support, helathy life expectancy at birth, 
+            and freedom to make life choices. It correlates most strongly with both GDP and healthy life expectancy. Further, generosity and 
+            perceptions of corruption is negatively correlated with happiness score.
+        """,
+        "Americas" : """
+            For developed countries with high Human Development Indices in Americas, happiness is slightly positively correlated to many factors like 
+            social support, freedom to make life choices, generosity, etc. Further, perceptions of corruption is highly negatively 
+            correlated with happiness index, showing that people care about politics, who the country's leaders are, and are aware 
+            enough to know what might be affecting their access to peace and standard of living on a daily basis.
+        """,
+        "Asia" : """
+            For developed countries with high Human Development Indices in Asia, happiness is positively correlated to many features with the strongest
+            correlation being GDP, social support, and generosity. Meanwhile, healthy life expectancy at birth and freedom to make lide choices were only
+            slightly positively correlated.  Further, perceptions of corruption is slightly negatively correlated with happiness index.
+        """,
+        "Europe" : """
+            For developed countries with high Human Development Indices in Europe, happiness is strongly positively correlated to many features with 
+            the strongest correlation being GDP and freedom to make life choices. Further, perceptions of corruption is strongly negatively correlated 
+            with happiness score, showing that people care about politics, who the country's leaders are, and are aware  enough to know what might 
+            be affecting their access to peace and standard of living on a daily basis.
+        """,
+        "Oceania" : """
+            All countries is Oceania in the available data is categorized as developed country so the heatmap below is identical to the heatmap above.
+        """
+    }
+
+    if not region_df.empty:
+        st.markdown(writeups_developed[continent])
 
         with st.expander("List of Developed Countries"):
             st.write(", ".join(region_df[COUNTRY].unique().tolist()))
 
-        fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
+        fig = px.imshow(region_df.corr().iloc[1:-1,1:-1], color_continuous_scale="RdBu", width=680)
         st.plotly_chart(fig)
     else:
         st.markdown(f"""Available data in the region {continent} does not have any developed country.""")
 
     st.markdown("""**Developing Countries**""")
 
-    developing_countries = list(df_hdi[df_hdi["hdi2019"] < 0.7][COUNTRY])
+    developing_countries = list(df_hdi[df_hdi["hdi2019"] < threshold][COUNTRY])
     region_df = df[df[COUNTRY].isin(developing_countries)]
 
-    if not region_df.empty:
-        st.markdown("""
+    writeups_developing = {
+        "Whole World" : """
             Through the below heatmap, we see that as we move towards developing countries with lower Human Development Indices, 
             happiness is positively only correlated to per capita GDP and Life Expectancy at birth, i.e., the economy and health 
             systems play the most significant roles as people's happiness depends on their ability to get by and make a living 
@@ -307,12 +351,37 @@ def app():
 
             Things like generosity, or freedom to make life choices are effectively first world problems that don't really factor 
             into general happiness for most people.
-        """)
+        """,
+        "Africa" : """
+            Through the below heatmap, we see that as we move towards developing countries in Africa with lower Human Development Indices, 
+            happiness is positively only slightly positively correlated with GDP and social support. 
+        """,
+        "Americas" : """
+            Through the below heatmap,  we see that as we move towards developing countries with lower Human Development Indices in Americas,
+            the factors that were positively correlated with happiness index for developed countries are also positively correlated 
+            in developing countries, more significantly. Further, we can see that generosity is strongly  negatively correlated 
+            and in perceptions of corruption is only slightly negatively correlated.
+        """,
+        "Asia" : """
+            Through the below heatmap,  we see that as we move towards developing countries with lower Human Development Indices in Asia,
+            in contrast to the developed countries, the factors that is the most positively correlated with happiness score are healthy life 
+            expectancy at birth, followed by social support. Also contrary to developed countries, generosity seem to have a negative correlation
+            with happiness index and the negative correlation to perceptions of corruption is stronger.
+        """,
+        "Europe" : """
+            Through the below heatmap,  we see that as we move towards developing countries with lower Human Development Indices in Europe,
+            contrary to the developed countries, there are no attributes with strong positive correlation.
+        """,
+        "Oceania" : """"N/A"""
+    }
+
+    if not region_df.empty:
+        st.markdown(writeups_developing[continent])
 
         with st.expander("List of Developing Countries"):
             st.write(", ".join(region_df[COUNTRY].unique().tolist()))
 
-        fig = px.imshow(region_df.corr(), color_continuous_scale="RdBu", width=680)
+        fig = px.imshow(region_df.corr().iloc[1:-1,1:-1], color_continuous_scale="RdBu", width=680)
         st.plotly_chart(fig)
     else:
         st.markdown(f"""Available data in the region {continent} does not have any developing country.""")
