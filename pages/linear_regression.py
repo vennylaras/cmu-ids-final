@@ -31,7 +31,10 @@ def app():
     X = np.array(df)
     y = np.array(df_y['Happiness Score'])
     reg = LinearRegression().fit(X, y)
-
+    
+    
+    st.markdown("# Let's Predict")
+    
     gdp  = st.number_input('GDP per Capita')
 
     social_support = st.slider('Social Support', 0, 10, 1)
@@ -44,27 +47,28 @@ def app():
 
     corruption = st.slider('Perceptions of Corruption', 0, 10, 1)
 
-    add_row = {'Log GDP per capita': np.log(gdp), 'Social support': social_support/10, 'Healthy life expectancy at birth': healthy_life,\
-         'Freedom to make life choices':freedom/10,'Generosity':generosity/10,'Perceptions of corruption':corruption/10}
+    if gdp == 0:
+      st.write("Error! Please fill out 'GDP per Capita.' The value should be higher than 0.")
+    else:
+      add_row = {'Log GDP per capita': np.log(gdp), 'Social support': social_support/10, 'Healthy life expectancy at birth': healthy_life,\
+            'Freedom to make life choices':freedom/10,'Generosity':generosity/10,'Perceptions of corruption':corruption/10}
 
-    df = df.append(add_row, ignore_index = True)
-    #st.write(df)
-    df_centered = (df - np.min(df, axis = 0)) / (np.max(df, axis = 0) - np.min(df, axis = 0))
-    predicted_val = reg.predict(np.array(([df.iloc[-1]])))
-    predicted_val_round = np.round(predicted_val[0],5)
-    st.write('Here is your happiness score:', predicted_val_round)
+      df = df.append(add_row, ignore_index = True)
+      #st.write(df)
+      df_centered = (df - np.min(df, axis = 0)) / (np.max(df, axis = 0) - np.min(df, axis = 0))
+      predicted_val = reg.predict(np.array(([df.iloc[-1]])))
+      predicted_val_round = np.round(predicted_val[0],5)
+      st.write('Here is your happiness score:', predicted_val_round)
 
-    predict_country = df_raw[['Country','Happiness Score']].reset_index()
-    min_val = 1000
-    predict_country = df_raw[['Country','Happiness Score']].reset_index()
-    min_val = 1000
-    for i in range(len(predict_country['Happiness Score'])):
-        val = predict_country['Happiness Score'][i]
-        dist = np.sqrt((predicted_val - val)**2)
-        if dist < min_val:
-            country = predict_country['Country'][i]
-            value = val
-            min_val = dist
+      predict_country = df_raw[['country','Life Ladder']].reset_index()
+      min_val = 1000
+      for i in range(len(predict_country['Life Ladder'])):
+            val = predict_country['Life Ladder'][i]
+            dist = np.sqrt((predicted_val - val)**2)
+            if dist < min_val:
+                  country = predict_country['country'][i]
+                  value = val
+                  min_val = dist
 
-    st.write('Then, you might be from ',country, '!')
-    st.write('Your happiness score is ',predicted_val_round, ', and', country,"'s happiness score is", round(value,5 ), '!')
+      st.write('Then, you might be from ',country, '!')
+      st.write('Your happiness score is ',predicted_val_round, ', and', country,"'s happiness score is", round(value,5 ), '!')
