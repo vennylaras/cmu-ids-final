@@ -8,33 +8,19 @@ from utils.constants import *
 
 def app():
 
-
     # Read File 
-    raw = pd.read_excel('data/HappinessScores.xls')
-    df_raw = raw[['Country name','Log GDP per capita','Social support','Healthy life expectancy at birth','Freedom to make life choices', 'Generosity',
-           'Perceptions of corruption']].rename(columns={'Country name':'country'})
+    raw,_ = load_mvp_data()
+    df_raw = raw[['Country','Log GDP per capita','Social support','Healthy life expectancy at birth','Freedom to make life choices', 'Generosity',
+           'Perceptions of corruption','Happiness Score']]
     df_raw = df_raw.dropna()
-    df_country = pd.read_excel('data/un_geoscheme.xlsx')
-    df_country.columns = ['country', 'sub-subregion', 'subregion', 'region', 'unsd_m49_codes']
-    df_country = df_country[['country', 'region']]
-    df_country['country'] = df_country['country'].str.strip()
+    df_country = load_country_data()
+    df_country = df_country[['Country', 'region']]
 
-    merged = df_raw.merge(df_country, on='country', how='left')
-    merged.loc[(merged.country == 'Congo (Brazzaville)'),'region'] = 'Africa'
-    merged.loc[(merged.country == 'Congo (Kinshasa)'),'region'] = 'Africa'
-    merged.loc[(merged.country == 'Czech Republic'),'region'] = 'Europe'
-    merged.loc[(merged.country == 'France'),'region'] = 'Europe'
-    merged.loc[(merged.country == 'Ivory Coast'),'region'] = 'Africa'
-    merged.loc[(merged.country == 'Myanmar'),'region'] = 'Asia'
-    merged.loc[(merged.country == 'Palestinian Territories'),'region'] = 'Asia'
-    merged.loc[(merged.country == 'South Korea'),'region'] = 'Asia'
-    merged.loc[(merged.country == 'Swaziland'),'region'] = 'Africa'
-    merged.loc[(merged.country == 'Taiwan Province of China'),'region'] = 'Asia'
-
-
-
+    merged = df_raw.merge(df_country, on='Country', how='left')
+    df_y = df_raw[['Log GDP per capita','Social support','Healthy life expectancy at birth','Freedom to make life choices', 'Generosity',
+           'Perceptions of corruption','Happiness Score']].dropna()
     df = df_raw[['Log GDP per capita','Social support','Healthy life expectancy at birth','Freedom to make life choices', 'Generosity',
-           'Perceptions of corruption']].dropna()
+           'Perceptions of corruption']]
     df_centered = (df - np.min(df, axis = 0)) / (np.max(df, axis = 0) - np.min(df, axis = 0))
     m = np.cov(df_centered, rowvar = False)
     eigenvalues, eigenvectors = np.linalg.eigh(m) 
@@ -44,13 +30,13 @@ def app():
     eigenvectors_sorted = eigenvectors[:, sorted_idx]
     # sort the eigenvalues
     eigenvalues_sorted = eigenvalues[sorted_idx]
-    #print(eigenvalues_sorted)
-    #print(eigenvectors_sorted)
+
     v = eigenvalues_sorted / np.sum(eigenvalues_sorted)
     v_cumulative = np.cumsum(v)
     print(v_cumulative)
 
-    pc = eigenvectors_sorted[:, :2]
+
+    pc = eigenvectors_sorted[:, :3]
     # now, let's transform the data
     data_transform = np.dot(df_centered, pc)
 
@@ -59,3 +45,13 @@ def app():
 
     fig = px.scatter(x = data[0], y = data[1], color = data['Continent'])
     st.plotly_chart(fig)
+    
+    ## 3d plot
+    fig = px.scatter_3d(
+        data, x=0, y=1, z=2, color=data['Continent'],
+        title=f'Total Explained Variance:{v_cumulative[2]*100:.2f}%',
+        labels={'0': 'PC 1', '1': 'PC 2', '2': 'PC 3'}
+    )
+
+    st.plotly_chart(fig)
+    
