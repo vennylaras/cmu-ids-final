@@ -15,6 +15,7 @@ NEGATIVE_AFFECT = "Negative affect"
 
 GDI = "GDI"
 HDI = "HDI"
+POPULATION = "Population"
 
 REGION_LIST = ["Africa", "Americas", "Asia", "Europe", "Oceania"]
 
@@ -46,9 +47,9 @@ cite_num = {
     "base":     "[1]", 
     "hdi":      "[2]", 
     "gdi":      "[3]", 
-    "suic":     "[4]", 
-    "mhadm":    "[5]", 
-    "mhfac":    "[6]", 
+    "mhadm":    "[4]", 
+    "mhfac":    "[5]", 
+    "suic":     "[6]", 
     "sun":      "[7]", 
     "sad":      "[8]", 
     "geo":      "[9]", 

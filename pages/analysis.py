@@ -282,10 +282,18 @@ def app():
     
     threshold = st.slider('HDI Score Threshold', 0.5, 0.8, 0.8)
 
-    st.markdown("""**Developed Countries**""")
-
     developed_countries = list(df_hdi[df_hdi["hdi2019"] >= threshold][COUNTRY])
     region_df = df[df[COUNTRY].isin(developed_countries)]
+
+    col1, col2 = st.columns([1, 1])
+    with col1: 
+        if not region_df.empty:
+            with st.expander("List of Developed Countries"):
+                st.write(", ".join(region_df[COUNTRY].unique().tolist()))
+        else: 
+            st.markdown(f"""Available data in the region {continent} does not have any developing country.""")
+    
+    st.markdown("""**Developed Countries**""")
 
     writeups_developed = {
         "Whole World" : """
@@ -383,8 +391,7 @@ def app():
 
         fig = px.imshow(region_df.corr().iloc[1:-1,1:-1], color_continuous_scale="RdBu", width=680)
         st.plotly_chart(fig)
-    else:
-        st.markdown(f"""Available data in the region {continent} does not have any developing country.""")
+        
 
     st.markdown("---")
     st.markdown('### Quality of Life Factors')
@@ -446,14 +453,15 @@ def app():
             category_orders={REGION: REGION_LIST})
     st.plotly_chart(fig)
     st.write(writeups_vs_year_2[option])
-    if option == LOG_GDP: 
-        fig = px.scatter(df.dropna(), x=LOG_GDP, y=HAPPINESS_SCORE, animation_frame=YEAR, 
-                color=REGION, hover_name=COUNTRY,
-                category_orders={REGION: REGION_LIST})
-    else: 
-        fig = px.scatter(df.dropna(), x=option, y=HAPPINESS_SCORE, animation_frame=YEAR, size=GDP,
-                color=REGION, hover_name=COUNTRY,
-                category_orders={REGION: REGION_LIST})
+
+    # if option == LOG_GDP: 
+    #     fig = px.scatter(df_pop_merged.dropna(), x=LOG_GDP, y=HAPPINESS_SCORE, animation_frame=YEAR, size='Log Population', size_max=10,
+    #             color=REGION, hover_name=COUNTRY,
+    #             category_orders={REGION: REGION_LIST})
+    # else: 
+    fig = px.scatter(df.dropna(), x=option, y=HAPPINESS_SCORE, animation_frame=YEAR, 
+            color=REGION, hover_name=COUNTRY,
+            category_orders={REGION: REGION_LIST})
     st.plotly_chart(fig)
     
 
