@@ -251,9 +251,8 @@ def app():
         'Oceania' : 'Freedom to make life choices, Generosity, and Social Support'
     }
 
-    st.markdown(f"""Looking at the pairwise correlations of all metrics with each other for all countries for the decade 2010-2019, \
-        we find that {writeups_corr_most[continent]} are **on average most heavily correlated with the Happiness Score \
-        happiness index.**""")
+    st.markdown(f"""Looking at the pairwise correlations of all metrics with each other for all countries for the decade 2010-2019,
+        we find that {writeups_corr_most[continent]} are **on average most heavily correlated with the Happiness Score.**""")
 
     fig = px.imshow(df.corr().iloc[1:-1,1:-1], color_continuous_scale="RdBu")
     st.plotly_chart(fig)
@@ -537,7 +536,7 @@ def app():
     st.write("""
         For countries having close to 0 mental health admissions per 100,000 people, the happiness score seems to be \
         dependent on other factors and a direct correlation cannot be observed. However, in countries having more than 100 mental \
-        health admissions per 100,000, the happiness score is less than 5, indicating that perhaps countries that have destigmatized \
+        health admissions per 100,000, the happiness score is greater than 5, indicating that perhaps countries that have destigmatized \
         mental health are more likely to have a higher happiness score. The graph could also indicate that there is poor \
         reporting of mental health admissions in various countries.
     """)
@@ -569,7 +568,7 @@ def app():
         We used the suicide rate data per 100,000 people obtained from World Health Organization {cite("suic")}. 
         """)
     
-    st.write("""We plotted happiness score as a line sorted from highest lo lowest throughout the year.
+    st.write("""We plotted happiness score as a line sorted from highest to lowest throughout the year.
         Another line representing the suicide rate was added to see the correlation.
         As we can see, the suicide rate fluctuates a lot irrespective of happiness score.
         Contrary to intuition, there seem to be no significant correlation between happiness index and suicide rate.
@@ -667,7 +666,7 @@ def app():
         Though research suggests that lack of sunshine is a leading cause of depression and anxiety {cite("sad")}, 
         we don't find any marginal correlation between happiness and sunshine, since other factors like GDP and health systems play a more important role.
 
-        For example, consider Finland and Egypt (highlighed in the above chart for convenience). Finland is the happiest country in the world even as 
+        For example, consider Finland and Egypt (highlighted in the above chart for convenience). Finland is the happiest country in the world even as 
         its residents fight cold and long for a healthy dose of sunshine for the most part of the year, while Egypt, a country that receives the 
         highest sunshine in the world on average, ranks pretty low on the happiness scale.
 

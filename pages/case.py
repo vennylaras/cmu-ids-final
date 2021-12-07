@@ -76,7 +76,7 @@ def app():
         st.plotly_chart(fig)
         
         st.markdown("""
-            It might be worth noting that the 2014 Indian general elections marked the landslide victory the Bharatiya Janta Party in India, a right-wing party, 
+            It might be worth noting that the 2014 Indian general elections marked the landslide victory of the Bharatiya Janta Party in India, a right-wing party, 
             with Narendra Modi becoming the Prime Minister. This could imply that the political mood of a country can impact the overall happiness score.
 
             Another implication of this could be pointing toward a **potential bias in the selection of the participants of the survey.** 

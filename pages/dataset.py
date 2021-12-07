@@ -95,9 +95,9 @@ def app():
         conducted or complete in some countries in some years.
     """)
 
-    st.write("""As such, since the main metric we want to study is the happiness index, given by the Happiness Score score, 
+    st.write("""As such, since the main metric we want to study is the happiness index, given by the Happiness Score, 
         we further check the nullity over years of the happiness index for each country, by pivoting our data appropriately 
-        to have countries as rows, years as columns, and values as the happiness index
+        to have countries as rows, years as columns, and values as the happiness index.
     """)
 
     happiness_df = df_unfiltered.pivot_table(index=COUNTRY, columns=YEAR, values=HAPPINESS_SCORE).reset_index()
@@ -139,7 +139,7 @@ def app():
         From a quick statistical analysis of the base dataset (see below), we do not find any funky outliers that would warrant removing. 
 
         Most notably, the min, max, mean, standard deviation of the Happiness Index scores have remained 
-        fairly stable across the globe in the past decade, which instills confindence in the accountability and systematic consistency of GWP surveys over the year.
+        fairly stable across the globe in the past decade, which instills confidence in the accountability and systematic consistency of GWP surveys over the year.
 
         Therefore, the only filtering we do on our base dataset is removing years with high nulls, as noted above.
     """)
