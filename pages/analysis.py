@@ -332,7 +332,7 @@ def app():
         """,
         "Africa" : """
             Through the below heatmap, we see that as we move towards developing countries in Africa with lower Human Development Indices, 
-            happiness is positively only slightly positively correlated with GDP and social support. 
+            happiness is only slightly positively correlated with GDP and social support. 
         """,
         "Americas" : """
             Through the below heatmap,  we see that as we move towards developing countries with lower Human Development Indices in Americas,

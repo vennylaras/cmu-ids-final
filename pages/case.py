@@ -52,7 +52,7 @@ def app():
         col1, _spacing, col2 = st.columns([5,1,4])
         with col1:    
             st.write("If we look back to the political climate in Venezuela in 2012, the presidential elections marked the beginning of the crisis in Venezuela. \
-                This has been described as the worst economic crisis in Venezuala's history; more severe than that of the United States during the Great Depression. \
+                This has been described as the worst economic crisis in Venezuela's history; more severe than that of the United States during the Great Depression. \
                 The life of the average Venezuelan was affected on all levels. 75% of the population had lost an average of 8 kgs/19 lbs in weight and majority of the \
                 people were not able to meet their basic food needs. Another side-effect of this was a sharp increase in the homicide rate from 39 per 100,000 in 2013 \
                 to 90 per 100,000 in 2015. Once again, we can see how all of these factors might have contributed to the overall happiness of the country's population.")
