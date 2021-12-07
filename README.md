@@ -21,12 +21,13 @@ The World Happiness Report is a publication of the Sustainable Development Solut
 The Streamlit application contains the following tabs:
 * Home - a high-level description of the project and the key questions we are trying to answer
 * Dataset - insights into the data sources and an initial statistical analysis of the data
-* Analysis - exploratory data analysis with interactive visualizations to analyze correlations between different factors
-* Case studies - deep dive into other factors that could contribute to trends in happiness scores, specifically with respect to 3 countries
+* Analysis - exploratory data analysis with interactive visualizations to analyze correlations between different factors. We also look at secondary datasets to draw more inferences about correlations between various factors
+* Case studies - deep dive into other factors that could contribute to trends in happiness scores, specifically with respect to 3 countries, Yemen, Venezuela, and India 
 * Prediction - using linear regression to predict the happiness score given the 6 factors, and the country most similar to that score
 * References
 
-## Deliverables
-- [x] Implemented and deployed a Streamlit application with interactive components, incorporating data preprocessing, initial statistical analysis and exploratory data analysis
-- [x] Explored 3 countries and their happiness score trends over the years, and proposed hypotheses relating their geopolitical mood with the happiness scores during tumultous periods
-- [x] Developed a machine learning model that can predict the happiness score based on relevant factors and further predict the country that is nearest to the predicted score based on euclidean distance
+## Contributions
+- Implemented and deployed a Streamlit application with interactive components, incorporating data preprocessing, initial statistical analysis and exploratory data analysis
+- Performed correlation analysis for various factors in the primary dataset, as well as joined with other datasets like Mental Health, Suicide Rates, etc. along with visualizations and controls for users to interactively filter and view data as they like
+- Explored 3 countries and their happiness score trends over the years, and proposed hypotheses relating their geopolitical mood with the happiness scores during tumultous periods
+- Developed a machine learning model that can predict the happiness score based on relevant factors and further predict the country that is nearest to the predicted score based on euclidean distance
