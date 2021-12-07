@@ -17,19 +17,20 @@ def app():
         This report contains a national happiness index for each country every year, and other key metrics noted below, based on respondent ratings of their own lives.
         Note that the happiness score, is also a result of a poll question in the Gallup World Poll survey, and is NOT computed using the other key metrics collected using the survey.""")
     # st.dataframe(df_unfiltered)
-    st.markdown(f"""
-        Here is a brief description of  these columns collected from the Gallup World Poll (GWP): 
-        - **{HAPPINESS_SCORE}:** {column_descriptions[HAPPINESS_SCORE]}
-        - **{LOG_GDP}:** {column_descriptions[LOG_GDP]}
-        - **{SOCIAL_SUPPORT}:** {column_descriptions[SOCIAL_SUPPORT]}
-        - **{LIFE_EXPECTANCY}:** {column_descriptions[LIFE_EXPECTANCY]}
-        - **{FREEDOM}:** {column_descriptions[FREEDOM]}
-        - **{GENEROSITY}:** {column_descriptions[GENEROSITY]}
-        - **{CORRUPTION}:** {column_descriptions[CORRUPTION]}
-        - **{POSITIVE_AFFECT}:** {column_descriptions[POSITIVE_AFFECT]}
-        - **{NEGATIVE_AFFECT}:** {column_descriptions[NEGATIVE_AFFECT]}
-        The affect measures lie between 0 and 1.
-        """)
+    with st.expander("Description of primary dataset columns"):
+        st.markdown(f"""
+            Here is a brief description of  these columns collected from the Gallup World Poll (GWP): 
+            - **{HAPPINESS_SCORE}:** {column_descriptions[HAPPINESS_SCORE]}
+            - **{LOG_GDP}:** {column_descriptions[LOG_GDP]}
+            - **{SOCIAL_SUPPORT}:** {column_descriptions[SOCIAL_SUPPORT]}
+            - **{LIFE_EXPECTANCY}:** {column_descriptions[LIFE_EXPECTANCY]}
+            - **{FREEDOM}:** {column_descriptions[FREEDOM]}
+            - **{GENEROSITY}:** {column_descriptions[GENEROSITY]}
+            - **{CORRUPTION}:** {column_descriptions[CORRUPTION]}
+            - **{POSITIVE_AFFECT}:** {column_descriptions[POSITIVE_AFFECT]}
+            - **{NEGATIVE_AFFECT}:** {column_descriptions[NEGATIVE_AFFECT]}
+            The affect measures lie between 0 and 1.
+            """)
 
     st.markdown('#### Secondary Datasets')
     # TODO Explain secondary datasets
@@ -37,9 +38,9 @@ def app():
         - **Human Development Index** {cite("hdi")}: Human development index (HDI) is a composite index measuring average achievement in three basic dimensions of human development
             which are long and healthly life, knowledge, and decent standard of living. This data is obtained from the United Nations Development Programme (UNDP) Human Development Report.
         - **Gender Development Index** {cite("gdi")}: Gender Development Index (GDI) is the ratio of female versus male HDI values, also obtained from UNDP Human Development Report.
-        - **Mental Health Facilities** {cite("mhfac")}: The number of mental health outpatients facilities per 100,000 population per country, obtained from World Health Organization (WHO).
         - **Mental Health Admissions** {cite("mhadm")}: The number of mental hospital admissions per 100,000 population per country, obtained from WHO.
-        - **Suicide Rate** {cite("suic")}: Suicide rate per 100,000 population per country, obtained from WHO.
+        - **Mental Health Facilities** {cite("mhfac")}: The number of mental health outpatients facilities per 100,000 population per country, obtained from World Health Organization (WHO).
+        - **Suicide Rates** {cite("suic")}: Suicide rate per 100,000 population per country, obtained from WHO.
         - **Sunshine Hours** {cite("sun")}: Monthly average sunshine hours per country in the year of 2019, obtained from Wikipedia.
         - **UN Geoscheme** {cite("geo")}: The United Nations (UN) geoscheme is a system which divides countries and territories into regions and subregions.
         """)
@@ -69,13 +70,17 @@ def app():
         these might be first world problems as people try to make ends meet, and their happiness correlates more to their basic needs like money and health being fulfilled.
 
         #### aCcountability: 
-        All datasets used are from official and well-known sources. Links to all datasets are available in on the references page. 
-        ---
+        All datasets used are from official and well-known sources. 
+        For instance, as noted in the _Statistical Analysis of Numerical Metrics_ section below, we notice that statistical metrics over the years have remained fairly stable over the past decade. 
+        Links to all datasets are available in on the references page. 
     """)
 
-    st.markdown('## Data Exploration')
-    st.markdown('#### Analysis of Missing Data')
-    st.write('We first look at our whole table to check if there is any jarring nullity that warrants dropping some columns.')
+    st.markdown("""
+        ---
+        ## Data Exploration
+        #### Analysis of Missing Data
+        We first look at our whole table to check if there is any jarring nullity that warrants dropping some columns.
+    """)
 
     def preview_nulls(df):
         # generate preview of entries with null values
@@ -132,6 +137,10 @@ def app():
     """)
     st.write("""
         From a quick statistical analysis of the base dataset (see below), we do not find any funky outliers that would warrant removing. 
+
+        Most notably, the min, max, mean, standard deviation of the Happiness Index scores have remained 
+        fairly stable across the globe in the past decade, which instills confindence in the accountability and systematic consistency of GWP surveys over the year.
+
         Therefore, the only filtering we do on our base dataset is removing years with high nulls, as noted above.
     """)
 
