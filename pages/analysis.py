@@ -453,14 +453,15 @@ def app():
             category_orders={REGION: REGION_LIST})
     st.plotly_chart(fig)
     st.write(writeups_vs_year_2[option])
-    if option == LOG_GDP: 
-        fig = px.scatter(df.dropna(), x=LOG_GDP, y=HAPPINESS_SCORE, animation_frame=YEAR, 
-                color=REGION, hover_name=COUNTRY,
-                category_orders={REGION: REGION_LIST})
-    else: 
-        fig = px.scatter(df.dropna(), x=option, y=HAPPINESS_SCORE, animation_frame=YEAR, size=GDP,
-                color=REGION, hover_name=COUNTRY,
-                category_orders={REGION: REGION_LIST})
+
+    # if option == LOG_GDP: 
+    #     fig = px.scatter(df_pop_merged.dropna(), x=LOG_GDP, y=HAPPINESS_SCORE, animation_frame=YEAR, size='Log Population', size_max=10,
+    #             color=REGION, hover_name=COUNTRY,
+    #             category_orders={REGION: REGION_LIST})
+    # else: 
+    fig = px.scatter(df.dropna(), x=option, y=HAPPINESS_SCORE, animation_frame=YEAR, 
+            color=REGION, hover_name=COUNTRY,
+            category_orders={REGION: REGION_LIST})
     st.plotly_chart(fig)
     
 
