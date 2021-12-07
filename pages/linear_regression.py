@@ -37,18 +37,17 @@ def app():
     st.markdown("We created a linear regression model using 6 features. This model predicts the happiness score based on your provided inputs. \
     Feel free to move the sliders below to provide inputs to our model and predict the happiness score of your country! \
     Also, our model additionally guesses your country by finding the one which has the most similar happiness score by applying euclidean distance.")
-    
-    gdp  = st.number_input(GDP)
+    gdp = st.slider(GDP, int(np.exp(np.min(np.array(df_y[LOG_GDP])))), int(np.exp(np.max(np.array(df_y[LOG_GDP])))), int(np.exp(np.median(np.array(df_y[LOG_GDP])))))
 
-    social_support = st.slider(SOCIAL_SUPPORT, 0, 10, 1)
+    social_support = st.slider(SOCIAL_SUPPORT, 0, 10, 8)
 
-    healthy_life = st.slider(LIFE_EXPECTANCY, 1, 100, 10)
+    healthy_life = st.slider(LIFE_EXPECTANCY, 1, 100, 60)
 
-    freedom = st.slider(FREEDOM, 0, 10, 1)
+    freedom = st.slider(FREEDOM, 0, 10, 7)
 
     generosity = st.slider(GENEROSITY, 0, 10, 1)
 
-    corruption = st.slider(CORRUPTION, 0, 10, 1)
+    corruption = st.slider(CORRUPTION, 0, 10, 8)
 
     if gdp == 0:
       st.write("Error! Please fill out 'GDP per Capita.' The value should be higher than 0.")

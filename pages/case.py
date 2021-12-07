@@ -1,6 +1,4 @@
 import streamlit as st
-import numpy as np
-import pandas as pd
 import plotly.express as px
 
 from utils.dataloader import load_mvp_data
@@ -77,12 +75,21 @@ def app():
         fig.add_annotation(x=2019, y=score(2019), text="Prime Ministerial Elections", showarrow=True, arrowhead=1)
         st.plotly_chart(fig)
         
-        st.write("Since India is still a developing country, it would make more sense to compare the happiness score trends with other such countries. \
-            Since 2015, India fared poorer on the happiness index than all other SAARC nations except Afghanistan. ")
+        st.markdown("""
+            It might be worth noting that the 2014 Indian general elections marked the landslide victory the Bharatiya Janta Party in India, a right-wing party, 
+            with Narendra Modi becoming the Prime Minister. This could imply that the political mood of a country can impact the overall happiness score.
+
+            Another implication of this could be pointing toward a **potential bias in the selection of the participants of the survey.** 
+            Are Gallup World Poll survey takers in India usually progressives (left-inclined)? If so, is it possible the happiness levels in the country have not actually declined for the majority, but only for the left-inclined subset? 
+
+            ---
+            **Comparison with SAARC Nations**
+            
+            Since India is still a developing country, it would make more sense to compare the happiness score trends with other such countries. 
+            To do this, we choose the [SAARC](https://en.wikipedia.org/wiki/South_Asian_Association_for_Regional_Cooperation) group of nations as the comparison group. 
+            Since 2015, India fared poorer on the happiness index than all other SAARC nations except Afghanistan.
+        """)
         
         fig2 = px.line(x, x=YEAR, y=HAPPINESS_SCORE, color=COUNTRY)
         st.plotly_chart(fig2)
-
-        st.write("It might be worth noting that the 2014 Indian general elections marked the landslide victory the Bharatiya Janta Party in India, \
-            with Narendra Modi becoming the Prime Minister. This could imply that the political mood of a country can impact the overall happiness score.")
     
