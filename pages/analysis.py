@@ -263,7 +263,9 @@ def app():
         countries and the general ability of people to fight for survival versus being able to take a safe and healthy 
         environment as a given.**
 
-        To test this hypothesis, we turn to looking at **Human Development Index** as a way to categorize countries.
+        ### Human Development Index
+
+        To test the above hypothesis, we turn to looking at **Human Development Index** as a way to categorize countries.
 
         The Human Development Index (HDI) is compiled by the United Nations Development Programme (UNDP) for 189 countries on 
         an annual basis {cite("hdi")}. The index considers the health, education and income in a given country to provide a measure of 

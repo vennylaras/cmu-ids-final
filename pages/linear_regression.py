@@ -37,17 +37,17 @@ def app():
     st.markdown("We created a linear regression model using 6 features. This model predicts the happiness score based on your provided inputs. \
     Feel free to move the sliders below to provide inputs to our model and predict the happiness score of your country! \
     Also, our model additionally guesses your country by finding the one which has the most similar happiness score by applying euclidean distance.")
-    gdp = st.slider(GDP, int(np.exp(np.min(np.array(df_y[LOG_GDP])))), int(np.exp(np.max(np.array(df_y[LOG_GDP])))), int(np.exp(np.median(np.array(df_y[LOG_GDP])))))
 
-    social_support = st.slider(SOCIAL_SUPPORT, 0, 10, 8)
+    col1, col2 = st.columns([1, 1])
+    with col1:    
+        gdp = st.slider(GDP, int(np.exp(np.min(np.array(df_y[LOG_GDP])))), int(np.exp(np.max(np.array(df_y[LOG_GDP])))), int(np.exp(np.median(np.array(df_y[LOG_GDP])))))
+        social_support = st.slider(SOCIAL_SUPPORT, 0, 10, 8)
+        healthy_life = st.slider(LIFE_EXPECTANCY, 1, 100, 60)
 
-    healthy_life = st.slider(LIFE_EXPECTANCY, 1, 100, 60)
-
-    freedom = st.slider(FREEDOM, 0, 10, 7)
-
-    generosity = st.slider(GENEROSITY, 0, 10, 1)
-
-    corruption = st.slider(CORRUPTION, 0, 10, 8)
+    with col2: 
+        freedom = st.slider(FREEDOM, 0, 10, 7)
+        generosity = st.slider(GENEROSITY, 0, 10, 1)
+        corruption = st.slider(CORRUPTION, 0, 10, 8)
 
     if gdp == 0:
       st.write("Error! Please fill out 'GDP per Capita.' The value should be higher than 0.")
@@ -59,8 +59,7 @@ def app():
       #st.write(df)
       df_centered = (df - np.min(df, axis = 0)) / (np.max(df, axis = 0) - np.min(df, axis = 0))
       predicted_val = reg.predict(np.array(([df.iloc[-1]])))
-      predicted_val_round = np.round(predicted_val[0],5)
-      st.write('Here is your happiness score:', predicted_val_round)
+      predicted_val_round = np.round(predicted_val[0],4)
 
       predict_country = df_raw[[COUNTRY, HAPPINESS_SCORE]].reset_index()
       min_val = 1000
@@ -72,5 +71,12 @@ def app():
                   value = val
                   min_val = dist
 
-      st.write('You might be from ',country, '!')
-      st.write('Your happiness score is ',predicted_val_round, ', and', country,"'s happiness score is", round(value,5 ), '!')
+      col1, col2 = st.columns([1, 1])
+      st.markdown("""
+        ---
+      """)
+      st.write(f'You might be from {country.strip()}!')
+      with col1:
+        st.metric(f'Predicted happiness score:', predicted_val_round) 
+      with col2: 
+        st.metric(f"{country}'s happiness score:", round(value, 4)) 
