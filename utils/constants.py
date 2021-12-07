@@ -15,6 +15,7 @@ NEGATIVE_AFFECT = "Negative affect"
 
 GDI = "GDI"
 HDI = "HDI"
+POPULATION = "Population"
 
 REGION_LIST = ["Africa", "Americas", "Asia", "Europe", "Oceania"]
 
