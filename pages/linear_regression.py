@@ -71,10 +71,10 @@ def app():
                   value = val
                   min_val = dist
 
-      col1, col2 = st.columns([1, 1])
       st.markdown("""
         ---
       """)
+      col1, col2 = st.columns([1, 1])
       st.write(f'You might be from {country.strip()}!')
       with col1:
         st.metric(f'Predicted happiness score:', predicted_val_round) 
