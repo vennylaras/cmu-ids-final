@@ -8,13 +8,10 @@ from utils.constants import *
 def app():
     df_filtered, df_unfiltered = load_mvp_data()
 
-    
-
     st.markdown('# Dataset')
+    st.markdown('## Data Sources')
 
-    st.markdown('### Data Source')
-
-    st.markdown('##### World Happiness Report')
+    st.markdown('#### World Happiness Report')
     st.markdown(f"""
         The World Happiness Report {cite("base")} is a publication of the United Nations Sustainable Development Solutions Network. 
         This report contains a national happiness index for each country every year, and other key metrics noted below, based on respondent ratings of their own lives.
@@ -34,7 +31,7 @@ def app():
         The affect measures lie between 0 and 1.
         """)
 
-    st.markdown('##### Secondary Datasets')
+    st.markdown('#### Secondary Datasets')
     # TODO Explain secondary datasets
     st.markdown(f"""
         - **Human Development Index** {cite("hdi")}: Human development index (HDI) is a composite index measuring average achievement in three basic dimensions of human development
@@ -48,11 +45,36 @@ def app():
         """)
 
     # TODO Add 4C: Completeness, Coherence, Correctness, aCcountability
-    st.markdown('###  Data Quality')
-    st.write('TODO: 4C')
+    st.markdown("""
+        ---
+        ##  Data Quality
+        Here we analyze our datasets through the lens of the 4Cs of data quality. 
 
-    st.markdown('###  Initial Exploration')
-    st.markdown('##### Analysis of Missing Data')
+        #### Completeness: 
+        The base dataset containing both countries and years as columns on initial exploration has deceptively low NULL values, 
+        however, on pivoting the dataset by country, a lot of NULLs are seen concentrated for the initial years in which the Gallup World Poll started.
+        This is likely because they slowly expanded their operations to cover the globe as they went on. As such, we remove the few years that have sparse data and choose to work with the decade 2010-2019, 
+        as these years have densely populated and largely complete data for about 150 of the total 195 countries of the world.
+
+        Please see the _Analysis of Missing Data_ section below for more details.
+
+        #### Correctness:
+        Happiness is a subjective topic. The World Gallup Poll is the largest operation across the globe that tries to objectively survey its participants based on binary poll questions and averages them through the responses obtained from a country. 
+        Furthermore, all our secondary datasets with the exception of sunshine hours are obtained from the official websites of the World Health Organization or the United Nations, which are the best sources of this information to the best of our knowledge.
+        That said, there might be unintentional biases in the selection of the people who take the surveys as we see in the case study for India, but there isn't a good way to verify that without another survey of similar scale. 
+          
+        #### Coherence:     
+        From the various correlations presented in the Analysis and Case Studies tab, the data tells us a consistent and intuitive story. 
+        For instance, the data supports intuition that people in developed countries care more about softer factors like social support, generosity, and so on, while in developing countries, 
+        these might be first world problems as people try to make ends meet, and their happiness correlates more to their basic needs like money and health being fulfilled.
+
+        #### aCcountability: 
+        All datasets used are from official and well-known sources. Links to all datasets are available in on the references page. 
+        ---
+    """)
+
+    st.markdown('## Data Exploration')
+    st.markdown('#### Analysis of Missing Data')
     st.write('We first look at our whole table to check if there is any jarring nullity that warrants dropping some columns.')
 
     def preview_nulls(df):
@@ -119,12 +141,12 @@ def app():
 
     # st.dataframe(stats(df_unfiltered))
 
-    columns = df_unfiltered.columns.tolist()
+    columns = df_filtered.columns.tolist()
     columns.remove(YEAR)
     columns.remove(COUNTRY)
     column = st.selectbox('Attribute', columns)
 
-    fig = px.box(df_unfiltered, x=YEAR, y=column, hover_data=[COUNTRY], points="all")
+    fig = px.box(df_filtered, x=YEAR, y=column, hover_data=[COUNTRY], points="all")
     st.plotly_chart(fig)
     
 
