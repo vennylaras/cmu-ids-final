@@ -279,22 +279,6 @@ def app():
     """)
 
     # hdi_option = st.radio('Select HDI category', ['Developed Countries', 'Developing Countries'])
-    
-    threshold = st.slider('HDI Score Threshold', 0.5, 0.8, 0.8)
-
-    developed_countries = list(df_hdi[df_hdi["hdi2019"] >= threshold][COUNTRY])
-    region_df = df[df[COUNTRY].isin(developed_countries)]
-
-    col1, col2 = st.columns([1, 1])
-    with col1: 
-        if not region_df.empty:
-            with st.expander("List of Developed Countries"):
-                st.write(", ".join(region_df[COUNTRY].unique().tolist()))
-        else: 
-            st.markdown(f"""Available data in the region {continent} does not have any developing country.""")
-    
-    st.markdown("""**Developed Countries**""")
-
     writeups_developed = {
         "Whole World" : """
             For developed countries with high Human Development Indices, happiness is positively correlated to many factors like 
@@ -334,22 +318,6 @@ def app():
         """
     }
 
-    if not region_df.empty:
-        st.markdown(writeups_developed[continent])
-
-        with st.expander("List of Developed Countries"):
-            st.write(", ".join(region_df[COUNTRY].unique().tolist()))
-
-        fig = px.imshow(region_df.corr().iloc[1:-1,1:-1], color_continuous_scale="RdBu", width=680)
-        st.plotly_chart(fig)
-    else:
-        st.markdown(f"""Available data in the region {continent} does not have any developed country.""")
-
-    st.markdown("""**Developing Countries**""")
-
-    developing_countries = list(df_hdi[df_hdi["hdi2019"] < threshold][COUNTRY])
-    region_df = df[df[COUNTRY].isin(developing_countries)]
-
     writeups_developing = {
         "Whole World" : """
             Through the below heatmap, we see that as we move towards developing countries with lower Human Development Indices, 
@@ -383,16 +351,40 @@ def app():
         "Oceania" : """"N/A"""
     }
 
-    if not region_df.empty:
+    threshold = st.slider('HDI Score Threshold', 0.5, 0.8, 0.8)
+
+    developed_countries = list(df_hdi[df_hdi["hdi2019"] >= threshold][COUNTRY])
+    developing_countries = list(df_hdi[df_hdi["hdi2019"] < threshold][COUNTRY])
+    developed_region_df = df[df[COUNTRY].isin(developed_countries)]
+    developing_region_df = df[df[COUNTRY].isin(developing_countries)]
+    
+    col1, col2 = st.columns([1, 1])
+    with col1: 
+        if not developed_region_df.empty:
+            with st.expander("List of Developed Countries"):
+                st.write(", ".join(developed_region_df[COUNTRY].unique().tolist()))
+        else: 
+            st.markdown(f"""No developed countries found for HDI threshold {threshold} in {continent}.""")
+    
+    with col2: 
+        if not developing_region_df.empty:
+            with st.expander("List of Developing Countries"):
+                st.write(", ".join(developing_region_df[COUNTRY].unique().tolist()))
+        else: 
+            st.markdown(f"""No developing countries found for HDI threshold {threshold} in {continent}.""")  
+    
+    if not developed_region_df.empty:
+        st.markdown("""**Developed Countries**""")
+        st.markdown(writeups_developed[continent])
+        fig = px.imshow(developed_region_df.corr().iloc[1:-1,1:-1], color_continuous_scale="RdBu", width=680)
+        st.plotly_chart(fig)
+  
+    if not developing_region_df.empty:
+        st.markdown("""**Developing Countries**""")
         st.markdown(writeups_developing[continent])
-
-        with st.expander("List of Developing Countries"):
-            st.write(", ".join(region_df[COUNTRY].unique().tolist()))
-
-        fig = px.imshow(region_df.corr().iloc[1:-1,1:-1], color_continuous_scale="RdBu", width=680)
+        fig = px.imshow(developing_region_df.corr().iloc[1:-1,1:-1], color_continuous_scale="RdBu", width=680)
         st.plotly_chart(fig)
         
-
     st.markdown("---")
     st.markdown('### Quality of Life Factors')
     st.write('In this section, we explore the correlation between happiness index and several quality of life factors presented in the original report.\
@@ -535,7 +527,8 @@ def app():
         happiness_mental_health_merged = happiness_df_with_continent.merge(mental_health, on=COUNTRY, how='inner')
         happiness_mental_health_merged = happiness_mental_health_merged.rename(columns={'2019': HAPPINESS_SCORE})
 
-        fig = px.scatter(happiness_mental_health_merged.dropna(), x="MentalHealthAdmissionsPer100000", y=HAPPINESS_SCORE, hover_name=COUNTRY, color="region",
+        fig = px.scatter(happiness_mental_health_merged.dropna(), x="MentalHealthAdmissionsPer100000", y=HAPPINESS_SCORE, 
+                hover_name=COUNTRY, color="region", labels={"MentalHealthAdmissionsPer100000": "Mental Health Admissions (per 100,000)"}, 
                 category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         return fig
     
@@ -559,13 +552,12 @@ def app():
 
         happiness_mental_health_facilities_merged = happiness_df_with_continent.merge(x, on=COUNTRY, how='inner')
         happiness_mental_health_facilities_merged = happiness_mental_health_facilities_merged.rename(columns={'2019':HAPPINESS_SCORE})
-        fig = px.scatter(happiness_mental_health_facilities_merged.dropna(), x="MentalHealthFacilitiesPer100000", y=HAPPINESS_SCORE, hover_name=COUNTRY, 
+        fig = px.scatter(happiness_mental_health_facilities_merged.dropna(), x="MentalHealthFacilitiesPer100000", y=HAPPINESS_SCORE, 
+                hover_name=COUNTRY, labels={"MentalHealthFacilitiesPer100000": "Mental Health Facilities (per 100,000)"}, 
                 range_x=(0,1), color="region", category_orders={"region": ["Africa", "Europe", "Asia", "Oceania", "Americas"]})
         return fig
 
     st.plotly_chart(plot_mental_health_facilities(df_pivot19, df_mh_fac))
-
-    
 
     st.markdown("""
         --- 

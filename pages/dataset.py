@@ -17,7 +17,7 @@ def app():
         This report contains a national happiness index for each country every year, and other key metrics noted below, based on respondent ratings of their own lives.
         Note that the happiness score, is also a result of a poll question in the Gallup World Poll survey, and is NOT computed using the other key metrics collected using the survey.""")
     # st.dataframe(df_unfiltered)
-    with st.expander("Description of primary dataset columns"):
+    with st.expander("Column descriptions for primary dataset"):
         st.markdown(f"""
             Here is a brief description of  these columns collected from the Gallup World Poll (GWP): 
             - **{HAPPINESS_SCORE}:** {column_descriptions[HAPPINESS_SCORE]}
@@ -32,18 +32,18 @@ def app():
             The affect measures lie between 0 and 1.
             """)
 
-    st.markdown('#### Secondary Datasets')
-    # TODO Explain secondary datasets
-    st.markdown(f"""
-        - **Human Development Index** {cite("hdi")}: Human development index (HDI) is a composite index measuring average achievement in three basic dimensions of human development
-            which are long and healthly life, knowledge, and decent standard of living. This data is obtained from the United Nations Development Programme (UNDP) Human Development Report.
-        - **Gender Development Index** {cite("gdi")}: Gender Development Index (GDI) is the ratio of female versus male HDI values, also obtained from UNDP Human Development Report.
-        - **Mental Health Admissions** {cite("mhadm")}: The number of mental hospital admissions per 100,000 population per country, obtained from WHO.
-        - **Mental Health Facilities** {cite("mhfac")}: The number of mental health outpatients facilities per 100,000 population per country, obtained from World Health Organization (WHO).
-        - **Suicide Rates** {cite("suic")}: Suicide rate per 100,000 population per country, obtained from WHO.
-        - **Sunshine Hours** {cite("sun")}: Monthly average sunshine hours per country in the year of 2019, obtained from Wikipedia.
-        - **UN Geoscheme** {cite("geo")}: The United Nations (UN) geoscheme is a system which divides countries and territories into regions and subregions.
-        """)
+    with st.expander("Description of secondary datasets"):
+        st.markdown(f"""
+            #### Secondary Datasets
+            - **Human Development Index** {cite("hdi")}: Human development index (HDI) is a composite index measuring average achievement in three basic dimensions of human development
+                which are long and healthly life, knowledge, and decent standard of living. This data is obtained from the United Nations Development Programme (UNDP) Human Development Report.
+            - **Gender Development Index** {cite("gdi")}: Gender Development Index (GDI) is the ratio of female versus male HDI values, also obtained from UNDP Human Development Report.
+            - **Mental Health Admissions** {cite("mhadm")}: The number of mental hospital admissions per 100,000 population per country, obtained from WHO.
+            - **Mental Health Facilities** {cite("mhfac")}: The number of mental health outpatients facilities per 100,000 population per country, obtained from World Health Organization (WHO).
+            - **Suicide Rates** {cite("suic")}: Suicide rate per 100,000 population per country, obtained from WHO.
+            - **Sunshine Hours** {cite("sun")}: Monthly average sunshine hours per country in the year of 2019, obtained from Wikipedia.
+            - **UN Geoscheme** {cite("geo")}: The United Nations (UN) geoscheme is a system which divides countries and territories into regions and subregions.
+            """)
 
     # TODO Add 4C: Completeness, Coherence, Correctness, aCcountability
     st.markdown("""
@@ -157,5 +157,9 @@ def app():
 
     fig = px.box(df_filtered, x=YEAR, y=column, hover_data=[COUNTRY], points="all")
     st.plotly_chart(fig)
+
+    st.markdown("""
+        --- 
+    """)
     
 
