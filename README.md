@@ -1,5 +1,5 @@
 # CMU: Interactive Data Science (05-839) Final Project
-* **Streamlit URL**: [World Happiness Scores]()
+* **Streamlit URL**: [World Happiness Scores](https://share.streamlit.io/vennylaras/cmu-ids-final/main/app.py)
 * **Team members**:
   * apsharma@andrew.cmu.edu
   * pvarshne@andrew.cmu.edu
